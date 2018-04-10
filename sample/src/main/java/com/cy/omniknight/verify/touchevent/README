@@ -1,0 +1,17 @@
+Layout -- dispatchTouchEvent -- true
+Layout -- dispatchTouchEvent -- false
+1. 两种情况都不会走layout的onTouchEvent
+2. return false 会调用父控件的onTouchEvent
+
+Layout -- onInterceptTouchEvent -- true
+调用自己的onTouchEvent
+Layout -- onInterceptTouchEvent -- false
+不拦截事件，ViewGroup 默认为false
+
+View -- dispatchTouchEvent -- true
+View -- dispatchTouchEvent -- false
+1. 两种情况都不会走View的onTouchEvent
+2. return false 会调用父控件的onTouchEvent
+
+还需要验证有多个layout嵌套的情况
+

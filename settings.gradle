@@ -1,1 +1,1 @@
-include ':sample', ':tracer', ':threadbus', ':tools'
+include ':sample', ':tracer', ':threadbus', ':tools', ':hotfix'

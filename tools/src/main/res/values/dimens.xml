@@ -1,0 +1,6 @@
+<resources>
+
+    <dimen name="toast_top_default">300px</dimen>
+    <dimen name="conversation_toast_top_default">420px</dimen>
+
+</resources>
