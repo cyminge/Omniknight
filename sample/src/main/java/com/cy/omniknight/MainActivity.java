@@ -3,7 +3,6 @@ package com.cy.omniknight;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,8 +10,6 @@ import android.os.Environment;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.cy.omniknight.verify.animation.AnimationActivity;
 import com.cy.omniknight.verify.dialog.Activity_TestDialogWithContext;
@@ -22,7 +19,6 @@ import com.cy.omniknight.verify.rgb888.Activity_TestRGB8888;
 import com.cy.omniknight.verify.touchevent.TouchEventTestActivity;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Scanner;

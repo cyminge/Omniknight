@@ -32,6 +32,7 @@ public class FontSizeChangerActivity extends BaseActivity implements View.OnClic
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.font_size_changer);
