@@ -1,1 +1,1 @@
-include ':sample', ':tracer', ':threadbus', ':tools', ':hotfix', ':netty-all-4.1.23.Final'
+include ':sample', ':tracer', ':threadbus', ':tools', ':hotfix', ':netty-all-4.1.23.Final', ':downloader', ':javabasics'
