@@ -26,7 +26,7 @@ public class ConnectStateMachine {
      * @param state
      * @return
      */
-    public boolean checkState(ConnectState state) {
+    public boolean isInState(ConnectState state) {
         synchronized (mState) {
             if (mState == state) {
                 return true;

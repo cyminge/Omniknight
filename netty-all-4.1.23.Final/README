@@ -4,3 +4,10 @@ https://blog.csdn.net/lixin88/article/details/52611550 --- 如何编译 netty �
 相关文档：
 http://www.infoq.com/cn/articles/netty-version-upgrade-history-thread-part/
 https://www.jianshu.com/p/6150a528d9d0
+
+心跳：
+https://segmentfault.com/a/1190000006931568  -- 浅析 Netty 实现心跳机制与断线重连
+https://www.cnblogs.com/leap/p/5352772.html
+https://www.cnblogs.com/austinspark-jessylu/p/7324909.html
+
+epoll/线程模型

@@ -1,13 +1,18 @@
 package com.cy.omniknight.socket.transport;
 
 import android.content.Context;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.util.Log;
 
 import com.cy.omniknight.socket.message.MMessage;
 import com.cy.omniknight.socket.netty.NettyClientInitializer;
 import com.cy.omniknight.socket.netty.NettyListener;
+import com.cy.omniknight.tools.StringUtil;
+import com.cy.omniknight.tools.receiver.ReceiverManager;
+import com.cy.omniknight.tools.receiver.StateChangedListener;
 import com.cy.omniknight.tracer.Tracer;
 
 import io.netty.bootstrap.Bootstrap;
@@ -51,13 +56,16 @@ public class LongConnectCenter extends HandlerThread implements Handler.Callback
     private Channel mChannel;
 
 
+    @Override
+    public synchronized void start() {
+        super.start();
+    }
+
     public LongConnectCenter(Context context, String address, int port, boolean isSSL) {
         super(THREAD_NAME);
 
         mContext = context;
-        mIPAddress.mAddress = address;
-        mIPAddress.mPort = port;
-        mIPAddress.mIsSSL = isSSL;
+        mIPAddress = new IPAddress(address, port, isSSL);
         mConnectStateMachine = new ConnectStateMachine();
     }
 
@@ -75,6 +83,12 @@ public class LongConnectCenter extends HandlerThread implements Handler.Callback
         private String mAddress;
         private int mPort;
         private boolean mIsSSL;
+
+        public IPAddress(String address, int port, boolean isSSL) {
+            mAddress = address;
+            mPort = port;
+            mIsSSL = isSSL;
+        }
     }
 
     @Override
@@ -90,12 +104,14 @@ public class LongConnectCenter extends HandlerThread implements Handler.Callback
         return false;
     }
 
+    private boolean isNeedLogin = false;
+
     /**
      * 连接服务器
      */
     private void connectInternal() {
         synchronized (mConnectLock) {
-            if(!mConnectStateMachine.checkState(ConnectStateMachine.ConnectState.BROKEN)) {
+            if(!mConnectStateMachine.isInState(ConnectStateMachine.ConnectState.BROKEN)) {
                 return;
             }
 
@@ -125,7 +141,12 @@ public class LongConnectCenter extends HandlerThread implements Handler.Callback
                 // Wait until the connection is closed.
                 channel.closeFuture().sync();
                 mChannel = channel;
-                mConnectStateMachine.setState(ConnectStateMachine.ConnectState.CONNECTED);
+                if(isNeedLogin) {
+                    mConnectStateMachine.setState(ConnectStateMachine.ConnectState.CONNECTED);
+                } else {
+                    mConnectStateMachine.setState(ConnectStateMachine.ConnectState.ESTABLISH);
+                }
+                Tracer.w("cyTest", "lalalla");
             } catch (Exception e) {
                 if(null !=  mEventLoopGroup) {
                     mEventLoopGroup.shutdownGracefully();
@@ -140,8 +161,8 @@ public class LongConnectCenter extends HandlerThread implements Handler.Callback
 
     private void disConnectInternal() {
         synchronized (mConnectLock) {
-            if (mConnectStateMachine.checkState(ConnectStateMachine.ConnectState.BROKEN)
-                    || mConnectStateMachine.checkState(ConnectStateMachine.ConnectState.CLOSING)) {
+            if (mConnectStateMachine.isInState(ConnectStateMachine.ConnectState.BROKEN)
+                    || mConnectStateMachine.isInState(ConnectStateMachine.ConnectState.CLOSING)) {
                 return;
             }
 
@@ -155,6 +176,9 @@ public class LongConnectCenter extends HandlerThread implements Handler.Callback
                 mEventLoopGroup.shutdownGracefully();
             }
         }
+
+        mThreadHandler.removeMessages(MSG_CONNECT);
+        mThreadHandler.removeMessages(MSG_SHUTDOWN);
     }
 
     private void connect() {
@@ -169,11 +193,62 @@ public class LongConnectCenter extends HandlerThread implements Handler.Callback
         start(); // 启动线程
         mThreadHandler = new Handler(getLooper(), this);// 创建子线程的Handler
 
+        keepEstablish(); // 保持连接
+        ReceiverManager.getInstance().startTracking(ReceiverManager.CHANGE_TYPE_NETWORK, mStateChangedListener);
+    }
 
+    private String mLastNetworkTypeName = null;
+    private String mLastNetworkSubTypeName = null;
+    private int mCustomNetworkType = -1;
+
+    private StateChangedListener mStateChangedListener = new StateChangedListener() {
+        @Override
+        public void onStateChanged(String changeType, Object... params) {
+            switch (changeType) {
+                case ReceiverManager.CHANGE_TYPE_NETWORK : // 網絡狀態切換
+                    mCustomNetworkType = Integer.parseInt(params[0].toString());
+                    NetworkInfo info = (NetworkInfo) params[1];
+                    dealWithNetworkStateChange(info);
+                    break;
+                default :
+                    break;
+            }
+        }
+    };
+
+    private void dealWithNetworkStateChange(NetworkInfo info) {
+        if(null == info || !info.isConnected()) {
+            mLastNetworkTypeName = null;
+            mLastNetworkSubTypeName = null;
+            disconnect(true);
+            return;
+        }
+
+        if(isSameNetwork(info.getTypeName(), info.getSubtypeName())) {
+            return;
+        }
+
+        mLastNetworkTypeName = info.getTypeName();
+        mLastNetworkSubTypeName = info.getSubtypeName();
+
+        if(mConnectStateMachine.isInState(ConnectStateMachine.ConnectState.BROKEN)) {
+            disconnect(true);
+        }
+
+        keepEstablish();
+    }
+
+    private boolean isSameNetwork(String networkTypeName, String networkSubTypeName) {
+        if (StringUtil.equalNoThrow(networkTypeName, mLastNetworkTypeName) &&
+                StringUtil.equalNoThrow(networkSubTypeName, mLastNetworkSubTypeName)) {
+            return true;
+        }
+        return false;
     }
 
     public void stopWork() {
-
+        ReceiverManager.getInstance().stopTracking(ReceiverManager.CHANGE_TYPE_NETWORK, mStateChangedListener);
+        disconnect(true);
     }
 
     /**
@@ -182,7 +257,7 @@ public class LongConnectCenter extends HandlerThread implements Handler.Callback
      * @return
      */
     public boolean isEstablished() {
-        if (mConnectStateMachine.checkState(ConnectStateMachine.ConnectState.ESTABLISH)) {
+        if (mConnectStateMachine.isInState(ConnectStateMachine.ConnectState.ESTABLISH)) {
             return true;
         } else {
             return false;
@@ -190,7 +265,44 @@ public class LongConnectCenter extends HandlerThread implements Handler.Callback
     }
 
     public void keepEstablish() {
+        synchronized (this) { // ??
+            if(!isNetworkConnected()) {
+                return;
+            }
 
+            switch (mConnectStateMachine.getCurrState()) {
+                case BROKEN :
+                    connect();
+                    break;
+                case CONNECTED:
+                    if(isNeedLogin) {
+                        toLogin();
+                    }
+                    break;
+                case CONNECTING:
+                    break;
+                case LOGINING:
+                    break;
+                case ESTABLISH:
+                    break;
+                case LOGOUTING:
+                    break;
+                case CLOSING:
+                    break;
+                case CHAOS:
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void toLogin() {
+
+    }
+
+    private boolean isNetworkConnected() {
+        return mCustomNetworkType != -1;
     }
 
     public void sendMessage(MMessage message) {

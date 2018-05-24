@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 
 import com.cy.omniknight.socket.message.MCSerFilter;
 import com.cy.omniknight.socket.message.MCache;
@@ -29,7 +30,7 @@ public enum SProxy {
 
     private Context mContext;
     private MCache mMCache;
-    private static Map<String, MTransPoint> mTransPointMap = new HashMap<>();
+    private HashMap<String, MTransPoint> mTransPointMap = new HashMap<>();
 
     private THandlerTimeOut handlerTimeOut = null;
     private HandlerThread timeOutThread = null;
@@ -53,17 +54,19 @@ public enum SProxy {
         mMCache = new MCache();
         mMCache.addFilter(new MCSerFilter());
 
+        // 添加序列化工具
+
+
         registerTransPoint(new UdpProtoBufTransPoint(context, mMCache, null, 0, true));
 
         // 超时重发机制
         timeOutThread = new HandlerThread(STR_TIMEOUT_THREAD_NAME);
         timeOutThread.start();
         handlerTimeOut = new THandlerTimeOut(timeOutThread.getLooper(), SProxy.this);
-
     }
 
-    public static void registerTransPoint(MTransPoint transPoint) {
-        if (transPoint == null || transPoint.getTypeName() == null || transPoint.getTypeName().length() == 0) {
+    public void registerTransPoint(MTransPoint transPoint) {
+        if (transPoint == null || TextUtils.isEmpty(transPoint.getTypeName())) {
             return;
         }
 
@@ -73,14 +76,14 @@ public enum SProxy {
         }
     }
 
-    public static MTransPoint getTransPoint(MEndPoint endPoint) {
+    public MTransPoint getTransPoint(MEndPoint endPoint) {
         if (endPoint == null) {
             return null;
         }
         return getTransPoint(endPoint.getTransType());
     }
 
-    public static MTransPoint getTransPoint(String typeName) {
+    public MTransPoint getTransPoint(String typeName) {
         if (typeName == null || typeName.length() == 0) {
             return null;
         }
@@ -162,7 +165,7 @@ public enum SProxy {
      *
      * @param message
      */
-    private static boolean delevery(MMessage message) {
+    private boolean delevery(MMessage message) {
         if(null == message) {
 //            MinaLog.e("send null message !!!");
             return false;
@@ -191,7 +194,7 @@ public enum SProxy {
      * 请求发送超时处理handler
      *
      */
-    private static class THandlerTimeOut extends Handler {
+    private class THandlerTimeOut extends Handler {
 
         private WeakReference<SProxy> wrProxy;
 

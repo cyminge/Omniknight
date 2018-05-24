@@ -4,6 +4,9 @@ import android.app.Application;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.widget.Toast;
+
+import com.cy.omniknight.socket.SPushService;
+import com.cy.omniknight.tools.receiver.ReceiverManager;
 import com.cy.omniknight.tracer.Tracer;
 import com.gionee.threadbus.ThreadBus;
 
@@ -22,7 +25,9 @@ public class BaseApplication extends Application {
         }
 
         ThreadBus.init(this); // 线程池入口函数
-		Tracer.init(getApplicationContext());
+		Tracer.init(this);
+        ReceiverManager.getInstance().init(this);
+        SPushService.startPushServer(this);
 	}
 	
 }

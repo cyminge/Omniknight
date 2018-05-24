@@ -75,6 +75,7 @@ public class Tracer {
         
         if (null == config) {
             TraceConfiguration.Builder builder = new TraceConfiguration.Builder(context);
+            builder.isPrintLogCat(true);
             config = builder.build();
         }
         mTraceConfiguration = config;

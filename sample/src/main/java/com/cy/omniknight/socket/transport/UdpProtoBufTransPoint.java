@@ -71,8 +71,12 @@ public class UdpProtoBufTransPoint implements MTransPoint {
 
 	@Override
 	synchronized public void deinitial() {
-		mLongConnectCenter.stopWork();
-		mLongConnectCenter = null;
+		if(null != mLongConnectCenter) {
+			mLongConnectCenter.stopWork();
+			mLongConnectCenter = null;
+		}
+
+
 	}
 
 	@Override

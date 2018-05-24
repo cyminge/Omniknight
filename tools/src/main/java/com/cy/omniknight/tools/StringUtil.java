@@ -46,10 +46,10 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 public class StringUtil {
-    
+
 	/**
 	 * 测试完毕，删除本地文件
-	 * 
+	 *
 	 * @return
 	 */
 	public static void deleteFileFromDre(String dir, String filename) {
@@ -93,7 +93,7 @@ public class StringUtil {
 	public static int dip2Px(Context context, float dip) {
 		return (int) (dip * context.getResources().getDisplayMetrics().density + 0.5f);
 	}
-	
+
 	/** * 根据手机的分辨率从 dp 的单位 转成为 px(像素) */
 	public static int dip2px(Context context, float dpValue) {
 		final float scale = context.getResources().getDisplayMetrics().density;
@@ -108,7 +108,7 @@ public class StringUtil {
 
 	/**
 	 * 特殊字符过滤
-	 * 
+	 *
 	 * @param str
 	 * @return
 	 * @throws PatternSyntaxException
@@ -148,7 +148,7 @@ public class StringUtil {
 
 	/**
 	 * 判断字符串中是否包含中文
-	 * 
+	 *
 	 * @param str
 	 * @return
 	 */
@@ -182,7 +182,7 @@ public class StringUtil {
 
 	/**
 	 * 把用秒数表示的时间转为年月日格式
-	 * 
+	 *
 	 * @param givenDate
 	 * @return
 	 */
@@ -195,7 +195,7 @@ public class StringUtil {
 
 	/**
 	 * 格式化当前时间
-	 * 
+	 *
 	 * @param format
 	 * @return
 	 */
@@ -208,7 +208,7 @@ public class StringUtil {
 
 	/**
 	 * 格式化当前时间
-	 * 
+	 *
 	 * @return
 	 */
 	@SuppressLint("SimpleDateFormat")
@@ -220,7 +220,7 @@ public class StringUtil {
 
 	/**
 	 * 格式化当前日期（yyyy-MM-dd）
-	 * 
+	 *
 	 * @return
 	 */
 	@SuppressLint("SimpleDateFormat")
@@ -232,7 +232,7 @@ public class StringUtil {
 
 	/**
 	 * 创建文件夹
-	 * 
+	 *
 	 * @param path
 	 */
 	synchronized public static void createFile(String path) {
@@ -246,7 +246,7 @@ public class StringUtil {
 
 	/**
 	 * 获取 ConnectivityManager
-	 * 
+	 *
 	 * @param context
 	 * @return
 	 */
@@ -258,7 +258,7 @@ public class StringUtil {
 
 	/**
 	 * 判断是否有可用网络
-	 * 
+	 *
 	 * @param context
 	 * @return
 	 */
@@ -280,7 +280,7 @@ public class StringUtil {
 
 	/**
 	 * 获取网络类型
-	 * 
+	 *
 	 * @param context
 	 * @return
 	 */
@@ -297,9 +297,21 @@ public class StringUtil {
 		return "-1";
 	}
 
+	public static NetworkInfo getNetworkInfo(Context context) {
+		connectivity = getConnectivityManager(context);
+		if (connectivity == null) {
+			return null;
+		}
+		try {
+			return connectivity.getActiveNetworkInfo();
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
 	/**
 	 * 将两张位图拼接成一张
-	 * 
+	 *
 	 * @param first
 	 * @param second
 	 * @return
@@ -318,7 +330,7 @@ public class StringUtil {
 
 	/**
 	 * 初始化PopupWindow
-	 * 
+	 *
 	 * @param context
 	 * @param view 要显示的布局
 	 * @param width PopupWindow宽度
@@ -341,7 +353,7 @@ public class StringUtil {
 
 	/**
 	 * 初始化PopupWindow
-	 * 
+	 *
 	 * @param context
 	 * @param view 要显示的布局
 	 * @param width PopupWindow宽度
@@ -363,7 +375,7 @@ public class StringUtil {
 
 	/**
 	 * 初始化PopupWindow
-	 * 
+	 *
 	 * @param context
 	 * @param view 要显示的布局
 	 * @param drawable PopupWindow背景图片
@@ -384,7 +396,7 @@ public class StringUtil {
 
 	/**
 	 * 显示PopupWindow
-	 * 
+	 *
 	 * @param view
 	 */
 	public static void showPopupWindowCenter(PopupWindow popupWindow, View view) {
@@ -395,7 +407,7 @@ public class StringUtil {
 
 	/**
 	 * 显示PopupWindow
-	 * 
+	 *
 	 * @param view
 	 */
 	public static void showPopupWindowBelowView(PopupWindow popupWindow, View view) {
@@ -407,7 +419,7 @@ public class StringUtil {
 	/**
 	 * 解析html标签
 	 * 这个方法不正确，别使用
-	 * 
+	 *
 	 * @param str
 	 * @return
 	 */
@@ -418,7 +430,7 @@ public class StringUtil {
 
 	/**
 	 * 匹配汉字数字字母
-	 * 
+	 *
 	 * @param str
 	 * @return
 	 */
@@ -432,7 +444,7 @@ public class StringUtil {
 
 	/**
 	 * 匹配字母斜杠
-	 * 
+	 *
 	 * @param str
 	 * @return
 	 */
@@ -446,7 +458,7 @@ public class StringUtil {
 
 	/**
 	 * Toast 显示
-	 * 
+	 *
 	 * @param context
 	 * @param toast
 	 * @param showStr
@@ -465,7 +477,7 @@ public class StringUtil {
 
 	/**
 	 * Toast 显示
-	 * 
+	 *
 	 * @param context
 	 * @param toast
 	 * @param showStr
@@ -485,7 +497,7 @@ public class StringUtil {
 
 	/**
 	 * 程序是否前置显示
-	 * 
+	 *
 	 * @param context
 	 * @return
 	 */
@@ -522,7 +534,7 @@ public class StringUtil {
 
 	/**
 	 * 得到当前应用显示的activity
-	 * 
+	 *
 	 * @param context
 	 * @return
 	 */
@@ -571,7 +583,7 @@ public class StringUtil {
 
 	/**
 	 * Judge parameter string is a numeric string or not
-	 * 
+	 *
 	 * @param string
 	 * @return
 	 */
@@ -586,8 +598,8 @@ public class StringUtil {
 
 	/**
 	 * Judge parameter string is empty, null or a numeric string
-	 * 
-	 * @param str
+	 *
+	 * @param
 	 * @return
 	 */
 	public static boolean isNumericOrEmpty(String string) {
@@ -618,7 +630,7 @@ public class StringUtil {
 
 	/**
 	 * judge string is null or empty
-	 * 
+	 *
 	 * @param string
 	 * @return
 	 */
@@ -711,7 +723,7 @@ public class StringUtil {
 
 	/**
 	 * modify by zhanmin 2013.10.24
-	 * 
+	 *
 	 * @param srcString
 	 * @return
 	 */
@@ -743,7 +755,7 @@ public class StringUtil {
 
 	/**
 	 * 获取带参数的字符串资源
-	 * 
+	 *
 	 * @param context
 	 * @param params
 	 * @return
@@ -755,7 +767,7 @@ public class StringUtil {
 
 	/**
 	 * 解析转义字符为符号
-	 * 
+	 *
 	 * @param str
 	 * @return
 	 */
@@ -780,7 +792,7 @@ public class StringUtil {
 
 	/**
 	 * 获取软件版本号
-	 * 
+	 *
 	 * @param context
 	 * @return
 	 */
@@ -800,9 +812,10 @@ public class StringUtil {
 
 	/**
 	 * 获取设备型号
-	 * 
+	 *
 	 * @return
 	 */
+	@SuppressLint("MissingPermission")
 	public static String getDeviceModel(Context context) {
 		TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 		return tm.getDeviceSoftwareVersion();
@@ -814,6 +827,7 @@ public class StringUtil {
 	 * @param context
 	 * @return
 	 */
+	@SuppressLint("MissingPermission")
 	public static String getIMEI(Context context) {
 		TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 		return tm.getDeviceId();

@@ -28,5 +28,8 @@
         </activity>
         <activity android:name=".verify.rgb888.Activity_TestRGB8888">
         </activity>
+
+        <service android:name=".socket.SPushService">
+        </service>
     </application>
 </manifest>
