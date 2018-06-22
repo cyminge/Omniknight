@@ -16,9 +16,9 @@ import com.cy.omniknight.tools.receiver.StateChangedListener;
 import com.cy.omniknight.tracer.Tracer;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -42,8 +42,8 @@ public class LongConnectCenter extends HandlerThread implements Handler.Callback
     private static final int MSG_KEEPALIVE_TICK = 9527;   // 连接动态保持
 
     private Context mContext;
-    private IPAddress mIPAddress;
 
+    private IPAddress mIPAddress;
     /* android 线程事件处理器 */
     private static Handler mThreadHandler;
 
@@ -70,13 +70,27 @@ public class LongConnectCenter extends HandlerThread implements Handler.Callback
     }
 
     @Override
-    public void onMessageResponse(ByteBuf byteBuf) {
-
+    public void onMessageResponse(String byteBuf) {
+        Log.e("cyTest", "-- onMessageResponse --> "+byteBuf);
     }
 
     @Override
-    public void onServiceStatusConnectChanged(int statusCode) {
+    public void onServiceStatusConnectChanged(ChannelHandlerContext ctx, int statusCode) {
+        Log.e("cyTest", "-- onServiceStatusConnectChanged -- statusCode:"+statusCode);
+        if(NettyListener.STATUS_CONNECT_SUCCESS == statusCode) {
+            mChannel = ctx.channel();
+            if(isNeedLogin) {
+                mConnectStateMachine.setState(ConnectStateMachine.ConnectState.CONNECTED);
+            } else {
+                mConnectStateMachine.setState(ConnectStateMachine.ConnectState.ESTABLISH);
+            }
 
+            // TODO　测试发送消息
+            ctx.channel().writeAndFlush("i am client !");
+            sendMessage(null);
+        } else {
+            // TODO 连接断开，重试？
+        }
     }
 
     private class IPAddress {
@@ -100,6 +114,13 @@ public class LongConnectCenter extends HandlerThread implements Handler.Callback
             case MSG_SHUTDOWN :
                 disConnectInternal();
                 break;
+            case MSG_SEND :
+                if(!mConnectStateMachine.isInState(ConnectStateMachine.ConnectState.ESTABLISH)) {
+                    return false;
+                }
+                mChannel.writeAndFlush("i am client by manual operation !");
+                mThreadHandler.sendEmptyMessageDelayed(MSG_SEND, 30000);
+                break;
         }
         return false;
     }
@@ -118,13 +139,13 @@ public class LongConnectCenter extends HandlerThread implements Handler.Callback
             mConnectStateMachine.setState(ConnectStateMachine.ConnectState.CONNECTING);
 
             try {
+                Tracer.d("cyTest", "---- 客户端开始连接服务器 ----");
                 mEventLoopGroup = new NioEventLoopGroup();
                 Bootstrap bootstrap = new Bootstrap();
                 bootstrap.group(mEventLoopGroup)
                         .option(ChannelOption.SO_KEEPALIVE,true)
                         .channel(NioSocketChannel.class)
                         .handler(new NettyClientInitializer(this, mIPAddress.mIsSSL));
-
                 // Make the connection attempt.
                 ChannelFuture future = bootstrap.connect(mIPAddress.mAddress, mIPAddress.mPort)
                         // 可以通过异步的方式来获取连接的状态，
@@ -137,23 +158,17 @@ public class LongConnectCenter extends HandlerThread implements Handler.Callback
 //                        })
                         .sync();
 //                future.awaitUninterruptibly(); // 等待异步操作完成。
-                Channel channel = future.channel();
+//                Channel channel = future.channel();
                 // Wait until the connection is closed.
-                channel.closeFuture().sync();
-                mChannel = channel;
-                if(isNeedLogin) {
-                    mConnectStateMachine.setState(ConnectStateMachine.ConnectState.CONNECTED);
-                } else {
-                    mConnectStateMachine.setState(ConnectStateMachine.ConnectState.ESTABLISH);
-                }
-                Tracer.w("cyTest", "lalalla");
+//                channel.closeFuture().sync();
             } catch (Exception e) {
                 if(null !=  mEventLoopGroup) {
                     mEventLoopGroup.shutdownGracefully();
                 }
                 mConnectStateMachine.setState(ConnectStateMachine.ConnectState.BROKEN);
-                Tracer.w("cyTest", e.getMessage());
+                Tracer.w("cyTest", "连接异常－－> " + e.getMessage());
             } finally {
+                Tracer.d("cyTest", "-- over --");
             }
         }
 
@@ -179,6 +194,8 @@ public class LongConnectCenter extends HandlerThread implements Handler.Callback
 
         mThreadHandler.removeMessages(MSG_CONNECT);
         mThreadHandler.removeMessages(MSG_SHUTDOWN);
+
+        mConnectStateMachine.setState(ConnectStateMachine.ConnectState.BROKEN);
     }
 
     private void connect() {
@@ -306,6 +323,6 @@ public class LongConnectCenter extends HandlerThread implements Handler.Callback
     }
 
     public void sendMessage(MMessage message) {
-
+        mThreadHandler.sendEmptyMessageDelayed(MSG_SEND, 30000);
     }
 }

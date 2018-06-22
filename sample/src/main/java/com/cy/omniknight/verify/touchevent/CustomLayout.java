@@ -22,7 +22,8 @@ import android.widget.LinearLayout;
 		case MotionEvent.ACTION_DOWN:
 			Log.i(TAG, "CustomLayout-onTouchEvent-ACTION_DOWN");
 			getParent().requestDisallowInterceptTouchEvent(false);
-			return true;
+//			return true;
+			break;
 		case MotionEvent.ACTION_UP:
 			Log.i(TAG, "CustomLayout-onTouchEvent-ACTION_UP");
 			break;

@@ -2,6 +2,7 @@ package com.cy.omniknight.socket.netty;
 
 
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
 
 /**
  *
@@ -19,10 +20,10 @@ public interface NettyListener {
     /**
      * 当接收到系统消息
      */
-    void onMessageResponse(ByteBuf byteBuf);
+    void onMessageResponse(String byteBuf);
 
     /**
      * 当服务状态发生变化时触发
      */
-    public void onServiceStatusConnectChanged(int statusCode);
+    public void onServiceStatusConnectChanged(ChannelHandlerContext ctx, int statusCode);
 }

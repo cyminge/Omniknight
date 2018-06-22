@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
@@ -50,6 +51,7 @@ public class FontSizeChangerActivity extends BaseActivity implements View.OnClic
         // 测试文字的放大缩小
         float btnSize = btn.getTextSize();
         StoreSize.setSize(this, btnSize);
+        Log.e("cyTest", "FontSizeChangerActivity.onCreate");
     }
 
     public Resources getResources(final float fontScale) {

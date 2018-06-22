@@ -1,15 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.cy.omniknight"
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -54,4 +55,5 @@ dependencies {
     compile project(path: ':tools')
     compile project(path: ':threadbus')
     compile project(path: ':netty-all-4.1.23.Final')
+    compile 'com.android.support:multidex:1.0.1'
 }

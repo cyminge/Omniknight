@@ -76,7 +76,6 @@ public class StringEncoder extends MessageToMessageEncoder<CharSequence> {
         if (msg.length() == 0) {
             return;
         }
-
         out.add(ByteBufUtil.encodeString(ctx.alloc(), CharBuffer.wrap(msg), charset));
     }
 }

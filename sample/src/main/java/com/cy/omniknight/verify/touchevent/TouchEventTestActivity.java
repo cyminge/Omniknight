@@ -1,13 +1,21 @@
 package com.cy.omniknight.verify.touchevent;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.cy.omniknight.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressLint("ClickableViewAccessibility") 
 public class TouchEventTestActivity extends Activity {
@@ -15,6 +23,27 @@ public class TouchEventTestActivity extends Activity {
 	private static final String TAG = "MotionEventDispatch";
 	private CustomButton button;
 	private CustomLayout layout;
+
+	private void floatAnim(View view,int delay){
+		List<Animator> animators = new ArrayList<>();
+		ObjectAnimator translationXAnim = ObjectAnimator.ofFloat(view, "translationX", -6.0f,6.0f,-6.0f);
+		translationXAnim.setDuration(1500);
+		translationXAnim.setRepeatCount(ValueAnimator.INFINITE);//无限循环
+//		 translationXAnim.setRepeatMode(ValueAnimator.INFINITE);//
+//		 translationXAnim.start();
+//		 animators.add(translationXAnim);
+		 ObjectAnimator translationYAnim = ObjectAnimator.ofFloat(view, "translationY", -3.0f,3.0f,-3.0f);
+		 translationYAnim.setDuration(1000);
+		 translationYAnim.setRepeatCount(ValueAnimator.INFINITE);
+//		 translationYAnim.setRepeatMode(ValueAnimator.INFINITE);
+		 translationYAnim.start();
+		 animators.add(translationYAnim);
+		 AnimatorSet btnSexAnimatorSet = new AnimatorSet();
+		 btnSexAnimatorSet.playTogether(animators);
+		 btnSexAnimatorSet.setStartDelay(delay);
+		 btnSexAnimatorSet.start();
+	}
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,11 +55,13 @@ public class TouchEventTestActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-//				Log.i(TAG, "CustomButton--onClick");
+				Log.i(TAG, "CustomButton------------------onClick");
 
 			}
 		});
 
+		ImageView iv = findViewById(R.id.moveview);
+		floatAnim(iv, 1000);
 //		button.setOnTouchListener(new View.OnTouchListener() {
 //
 //			@Override
@@ -53,7 +84,7 @@ public class TouchEventTestActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-//				Log.i(TAG, "CustomLayout---onClick");
+				Log.i(TAG, "CustomLayout---------------------onClick");
 			}
 		});
 

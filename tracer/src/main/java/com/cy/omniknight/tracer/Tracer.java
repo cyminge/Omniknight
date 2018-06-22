@@ -297,7 +297,7 @@ public class Tracer {
     @SuppressLint("SimpleDateFormat") 
     public static void appendSimpleLog(String level, String tag, String msg) {
         String timeStr = new SimpleDateFormat("HH:mm:ss").format(new Date());
-        logStringBuilder.append(String.format("%s %c\\%-20s\t%s\n", timeStr, level, tag, msg));
+        logStringBuilder.append(String.format("%s %s\\%-20s\t%s\n", timeStr, level, tag, msg));
         logStringCount++;
     }
 

@@ -57,7 +57,7 @@ public enum SProxy {
         // 添加序列化工具
 
 
-        registerTransPoint(new UdpProtoBufTransPoint(context, mMCache, null, 0, true));
+        registerTransPoint(new UdpProtoBufTransPoint(context, mMCache, "192.168.27.51", 9527, false));
 
         // 超时重发机制
         timeOutThread = new HandlerThread(STR_TIMEOUT_THREAD_NAME);

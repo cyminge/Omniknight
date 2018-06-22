@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.cy.omniknight.verify.animation.AnimationActivity;
+import com.cy.omniknight.verify.deeplinker.DeepLinkerActivity;
 import com.cy.omniknight.verify.dialog.Activity_TestDialogWithContext;
 import com.cy.omniknight.verify.fontsize.FontSizeChangerActivity;
 import com.cy.omniknight.verify.picdecode.Activity_PicDecode;
@@ -157,6 +158,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 intent.setClass(this, Activity_TestRGB8888.class);
                 startActivity(intent);
                 break;
+            case R.id.btn7 :
+                intent.setClass(this, DeepLinkerActivity.class);
+                startActivity(intent);
+                break;
         }
 
     }
@@ -228,6 +233,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        Log.e("cyTest", "Activity_A.onDestroy");
+        Log.e("cyTest", "MainActivity.onDestroy");
     }
 }

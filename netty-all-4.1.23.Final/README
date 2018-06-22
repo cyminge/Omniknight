@@ -11,3 +11,9 @@ https://www.cnblogs.com/leap/p/5352772.html
 https://www.cnblogs.com/austinspark-jessylu/p/7324909.html
 
 epoll/线程模型
+
+
+
+备注：
+1. jctolls的jar用的jdk版本有问题，所以接入了源码进行编译
+2. 请求超时如何设置
