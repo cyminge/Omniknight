@@ -10,12 +10,16 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import io.netty.handler.timeout.IdleStateHandler;
 
 /**
  *
  * Created by LiuSaibao on 11/23/2016.
  */
 public class NettyClientInitializer extends ChannelInitializer<SocketChannel> {
+
+    private static final int READ_TIMEOUT = Integer.parseInt(System.getProperty("readTimeout", "10")); // 服务器返回消息超时时间??
+    private static final int WRITER_TIMEOUT = Integer.parseInt(System.getProperty("writerTimeout", "40")); // 服务器返回消息超时时间??
 
     private NettyListener listener;
     private boolean mIsSSL;
@@ -41,16 +45,6 @@ public class NettyClientInitializer extends ChannelInitializer<SocketChannel> {
         }
 
         ChannelPipeline pipeline = ch.pipeline();
-
-//        //获取管道
-//        ChannelPipeline pipeline = socketChannel.pipeline();
-//        //字符串解码器
-//        pipeline.addLast(new StringDecoder());
-//        //字符串编码器
-//        pipeline.addLast(new StringEncoder());
-//        //处理类
-//        pipeline.addLast(new ServerHandler4());
-
         if(mIsSSL) {
             pipeline.addLast(sslCtx.newHandler(ch.alloc()));    // 开启SSL
         }
@@ -61,28 +55,8 @@ public class NettyClientInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(new StringDecoder());
         //字符串编码器
         pipeline.addLast(new StringEncoder());
+        pipeline.addLast(new IdleStateHandler(READ_TIMEOUT, WRITER_TIMEOUT, 0));
         //处理类
         pipeline.addLast(new NettyClientHandler(listener));
     }
-
-//    @Override
-//    protected void initChannel(SocketChannel ch) throws Exception {
-//        // Configure SSL.
-//        final SslContext sslCtx;
-//        if (mIsSSL) {
-//            sslCtx = SslContextBuilder.forClient()
-//                    .trustManager(InsecureTrustManagerFactory.INSTANCE).build();
-//        } else {
-//            sslCtx = null;
-//        }
-//
-//        ChannelPipeline pipeline = ch.pipeline();
-//
-//        if(mIsSSL) {
-//            pipeline.addLast(sslCtx.newHandler(ch.alloc()));    // 开启SSL
-//        }
-//        pipeline.addLast(new LoggingHandler(LogLevel.DEBUG));    // 开启日志，可以设置日志等级
-////        pipeline.addLast(new IdleStateHandler(30, 60, 100));
-//        pipeline.addLast(new NettyClientHandler(listener));
-//    }
 }

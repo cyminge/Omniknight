@@ -25,7 +25,7 @@ public class NettyServer {
         EventLoopGroup boss = new NioEventLoopGroup();
         EventLoopGroup worker = new NioEventLoopGroup();
 
-        try{
+        try {
             //辅助启动类
             ServerBootstrap bootstrap = new ServerBootstrap();
             //设置线程池

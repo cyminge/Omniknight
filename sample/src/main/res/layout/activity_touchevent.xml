@@ -25,12 +25,12 @@
         android:layout_height="105dp"
         android:layout_alignParentBottom="true">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:background="@android:color/holo_blue_light"
-            android:layout_alignParentBottom="true">
-        </RelativeLayout>
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="80dp"-->
+            <!--android:background="@android:color/holo_blue_light"-->
+            <!--android:layout_alignParentBottom="true">-->
+        <!--</RelativeLayout>-->
 
         <ImageView
             android:id="@+id/moveview"
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:text="试玩试玩"
             android:background="@drawable/sw_play_button"
-
+            android:layout_marginTop="15dp"
             />
 
 

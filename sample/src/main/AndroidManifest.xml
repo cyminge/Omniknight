@@ -22,7 +22,7 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
     <uses-permission android:name="com.gionee.cloud.permission.CHANGE_RECORD" />
-    <!--android O install -->
+    <!-- android O install -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <!-- for Amigo Play SDK -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -31,7 +31,7 @@
     <!-- for native sdk -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!--for native sdk  end-->
+    <!-- for native sdk  end -->
     <!-- for account SDK -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.UPDATE_APP_OPS_STATS" />
@@ -41,7 +41,7 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
-    <uses-permission android:name="android.permission.GET_PACKAGE_SIZE"/>
+    <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" />
 
     <application
         android:name=".BaseApplication"
@@ -53,26 +53,21 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".verify.fontsize.FontSizeChangerActivity"></activity>
+        <activity android:name=".verify.touchevent.TouchEventTestActivity"></activity>
+        <activity android:name=".verify.dialog.Activity_TestDialogWithContext"></activity>
+        <activity android:name=".verify.animation.AnimationActivity"></activity>
+        <activity android:name=".verify.picdecode.Activity_PicDecode"></activity>
+        <activity android:name=".verify.rgb888.Activity_TestRGB8888"></activity>
+        <activity android:name=".verify.deeplinker.DeepLinkerActivity"></activity>
 
-        <activity android:name=".verify.fontsize.FontSizeChangerActivity">
-        </activity>
-        <activity android:name=".verify.touchevent.TouchEventTestActivity">
-        </activity>
-        <activity android:name=".verify.dialog.Activity_TestDialogWithContext">
-        </activity>
-        <activity android:name=".verify.animation.AnimationActivity">
-        </activity>
-        <activity android:name=".verify.picdecode.Activity_PicDecode">
-        </activity>
-        <activity android:name=".verify.rgb888.Activity_TestRGB8888">
-        </activity>
-        <activity android:name=".verify.deeplinker.DeepLinkerActivity">
-        </activity>
+        <service android:name=".socket.SPushService"></service>
 
-        <service android:name=".socket.SPushService">
-        </service>
+        <activity android:name=".kotlin.KotlinFirstActivity"></activity>
     </application>
+
 </manifest>

@@ -55,18 +55,18 @@ public class LongConnectCenter extends HandlerThread implements Handler.Callback
 
     private Channel mChannel;
 
-
-    @Override
-    public synchronized void start() {
-        super.start();
-    }
-
     public LongConnectCenter(Context context, String address, int port, boolean isSSL) {
         super(THREAD_NAME);
 
         mContext = context;
         mIPAddress = new IPAddress(address, port, isSSL);
         mConnectStateMachine = new ConnectStateMachine();
+    }
+
+
+    @Override
+    public synchronized void start() {
+        super.start();
     }
 
     @Override
@@ -269,7 +269,7 @@ public class LongConnectCenter extends HandlerThread implements Handler.Callback
     }
 
     /**
-     * 判断长连接的状态，是否为以建立连接
+     * 判断长连接的状态，是否为已建立连接
      *
      * @return
      */

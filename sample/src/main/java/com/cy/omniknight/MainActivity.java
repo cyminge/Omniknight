@@ -1,13 +1,19 @@
 package com.cy.omniknight;
 
 import android.app.ActivityManager;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.RequiresApi;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -22,6 +28,7 @@ import com.cy.omniknight.verify.touchevent.TouchEventTestActivity;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
@@ -61,13 +68,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     public static void setDataConnectionState(Context cxt, boolean state) {
-        Log.e("cyTest", "重启数据连接： state="+state);
+        Log.e("cyTest", "重启数据连接： state=" + state);
         ConnectivityManager connectivityManager = null;
         Class<?> connectivityManagerClz = null;
         try {
             connectivityManager = (ConnectivityManager) cxt.getSystemService("connectivity");
             connectivityManagerClz = connectivityManager.getClass();
-            Method method = connectivityManagerClz.getMethod("setMobileDataEnabled", new Class[] { boolean.class });
+            Method method = connectivityManagerClz.getMethod("setMobileDataEnabled", new Class[]{boolean.class});
             method.invoke(connectivityManager, state);
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,7 +94,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         try {
             File mountFile = new File("/proc/mounts");
-            if(mountFile.exists()){
+            if (mountFile.exists()) {
                 Scanner scanner = new Scanner(mountFile);
                 while (scanner.hasNext()) {
                     String line = scanner.nextLine();
@@ -130,35 +137,96 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
+    public boolean openUrl(Context paramContext, String paramString) {
+        paramString = "youku://http?action=http&source=youkushijiebei&refer=youkushijiebei_operation.liuxiao.liux_qudao09_007000_Bj2Ezy_18061113&url=https%3A%2F%2Facz.youku.com%2Fwow%2Fyktopic%2Fact%2FAEN9G4GP%3FisNeedBaseImage%3D1%26_wvUseWKWebView%3DYES";
+        try {
+            Intent localIntent = new Intent("android.intent.action.VIEW");
+            localIntent.setFlags(268435456);
+            localIntent.setData(Uri.parse(paramString));
+            paramContext.startActivity(localIntent);
+            return true;
+        } catch (ActivityNotFoundException localActivityNotFoundException) {
+            localActivityNotFoundException.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean deviceCanHandleIntent(Context context, Intent intent) {
+        try {
+            PackageManager packageManager = context.getPackageManager();
+            List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
+            return !activities.isEmpty();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
+    private boolean openByDeepLink(String deepLink) throws Exception {
+        Intent intent;
+        if (deepLink.startsWith("intent:#Intent")) {
+            intent = Intent.parseUri(deepLink, Intent.URI_INTENT_SCHEME);
+        } else {
+            intent = new Intent(Intent.ACTION_VIEW, Uri.parse(deepLink));
+            //判断设备是否可用处理当前Intent.
+            if (!deviceCanHandleIntent(this, intent)) {
+                Log.d("cyTest", "通过DeepLink链接启动应用失败, 无法处理当前Intent.");
+                return false;
+            }
+        }
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        return true;
+    }
+
     @Override
     public void onClick(View v) {
         Intent intent = new Intent();
         switch (v.getId()) {
-            case R.id.btn1 :
+            case R.id.btn1:
                 intent.setClass(this, FontSizeChangerActivity.class);
+                intent.setComponent(new ComponentName("gn.com.android.gamehall", "gn.com.android.gamehall.GNMainActivity"));
                 startActivity(intent);
+
+
+//                String paramString = "youku://http?action=http&source=youkushijiebei&refer=youkushijiebei_operation.liuxiao.liux_qudao09_007000_Bj2Ezy_18061113&url=https%3A%2F%2Facz.youku.com%2Fwow%2Fyktopic%2Fact%2FAEN9G4GP%3FisNeedBaseImage%3D1%26_wvUseWKWebView%3DYES";
+//                try {
+//                    openByDeepLink(paramString);
+//                } catch (Exception e) {
+//
+//                }
+
+//                openUrl(this, null);
+//
+//                Intent intent1 = new Intent("android.intent.action.VIEW");
+//                String paramString = "youku://http?action=http&source=youkushijiebei&refer=youkushijiebei_operation.liuxiao.liux_qudao09_007000_Bj2Ezy_18061113&url=https%3A%2F%2Facz.youku.com%2Fwow%2Fyktopic%2Fact%2FAEN9G4GP%3FisNeedBaseImage%3D1%26_wvUseWKWebView%3DYES";
+//                intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                String intnetUri = intent1.toURI();
+//                intent1.setData(Uri.parse(paramString));
+
+//                Log.e("cyTest", "intnetUri --> "+intnetUri);
                 break;
-            case R.id.btn2 :
+            case R.id.btn2:
                 intent.setClass(this, TouchEventTestActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.btn3 :
+            case R.id.btn3:
                 intent.setClass(this, Activity_TestDialogWithContext.class);
                 startActivity(intent);
                 break;
-            case R.id.btn4 :
+            case R.id.btn4:
                 intent.setClass(this, AnimationActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.btn5 :
+            case R.id.btn5:
                 intent.setClass(this, Activity_PicDecode.class);
                 startActivity(intent);
                 break;
-            case R.id.btn6 :
+            case R.id.btn6:
                 intent.setClass(this, Activity_TestRGB8888.class);
                 startActivity(intent);
                 break;
-            case R.id.btn7 :
+            case R.id.btn7:
                 intent.setClass(this, DeepLinkerActivity.class);
                 startActivity(intent);
                 break;
@@ -168,12 +236,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     public boolean isAppForeground(final Context context) {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        if(null == am.getRunningTasks(1)) {
+        if (null == am.getRunningTasks(1)) {
             return false;
         }
         ActivityManager.RunningTaskInfo foregroundTaskInfo = am.getRunningTasks(1).get(0);
         String topAppPackage = foregroundTaskInfo.topActivity.getPackageName();
-        Log.e("cyTeset", "--------------------topAppPackage:"+topAppPackage);
+        Log.e("cyTeset", "--------------------topAppPackage:" + topAppPackage);
         if (topAppPackage != null && topAppPackage.contentEquals(context.getPackageName())) {
             return true;
         }

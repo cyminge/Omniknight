@@ -27,19 +27,19 @@ public class TouchEventTestActivity extends Activity {
 	private void floatAnim(View view,int delay){
 		List<Animator> animators = new ArrayList<>();
 		ObjectAnimator translationXAnim = ObjectAnimator.ofFloat(view, "translationX", -6.0f,6.0f,-6.0f);
-		translationXAnim.setDuration(1500);
+		translationXAnim.setDuration(1000);
 		translationXAnim.setRepeatCount(ValueAnimator.INFINITE);//无限循环
 //		 translationXAnim.setRepeatMode(ValueAnimator.INFINITE);//
 //		 translationXAnim.start();
 //		 animators.add(translationXAnim);
 		 ObjectAnimator translationYAnim = ObjectAnimator.ofFloat(view, "translationY", -3.0f,3.0f,-3.0f);
-		 translationYAnim.setDuration(1000);
+		 translationYAnim.setDuration(1500);
 		 translationYAnim.setRepeatCount(ValueAnimator.INFINITE);
 //		 translationYAnim.setRepeatMode(ValueAnimator.INFINITE);
 		 translationYAnim.start();
 		 animators.add(translationYAnim);
 		 AnimatorSet btnSexAnimatorSet = new AnimatorSet();
-		 btnSexAnimatorSet.playTogether(animators);
+		 btnSexAnimatorSet.playTogether(translationYAnim);
 		 btnSexAnimatorSet.setStartDelay(delay);
 		 btnSexAnimatorSet.start();
 	}
@@ -61,7 +61,7 @@ public class TouchEventTestActivity extends Activity {
 		});
 
 		ImageView iv = findViewById(R.id.moveview);
-		floatAnim(iv, 1000);
+		floatAnim(iv, 100);
 //		button.setOnTouchListener(new View.OnTouchListener() {
 //
 //			@Override

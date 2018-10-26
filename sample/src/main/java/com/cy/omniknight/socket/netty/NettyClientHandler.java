@@ -5,6 +5,8 @@ import com.cy.omniknight.tracer.Tracer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 
 /**
  *
@@ -35,21 +37,35 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<String> {
 		listener.onMessageResponse(byteBuf);
 	}
 
-	/*@Override
+	@Override
 	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-
-		if (evt instanceof IdleStateEvent) {
-			IdleStateEvent event = (IdleStateEvent) evt;
-			if (event.state() == IdleState.READER_IDLE){
-				ctx.close();
-			}else if (event.state() == IdleState.WRITER_IDLE){
-				try{
-					ctx.channel().writeAndFlush("Chilent-Ping\r\n");
-				} catch (Exception e){
-					Timber.e(e.getMessage());
-				}
-			}
+		if (!(evt instanceof IdleStateEvent)) {
+			return;
 		}
-		super.userEventTriggered(ctx, evt);
-	}*/
+
+		IdleStateEvent e = (IdleStateEvent) evt;
+		if (e.state() == IdleState.READER_IDLE) {
+			// The connection was OK but there was no traffic for last period.
+//			Tracer.d("cyTest", "read idle");
+//			ctx.close();
+		} else if (e.state() == IdleState.WRITER_IDLE) {
+			Tracer.d("cyTest", "writer idle");
+			// TODO 发心跳
+
+		}
+
+//		if (evt instanceof IdleStateEvent) {
+//			IdleStateEvent event = (IdleStateEvent) evt;
+//			if (event.state() == IdleState.READER_IDLE){
+//				ctx.close();
+//			}else if (event.state() == IdleState.WRITER_IDLE){
+//				try{
+//					ctx.channel().writeAndFlush("Chilent-Ping\r\n");
+//				} catch (Exception e){
+//					Timber.e(e.getMessage());
+//				}
+//			}
+//		}
+//		super.userEventTriggered(ctx, evt);
+	}
 }

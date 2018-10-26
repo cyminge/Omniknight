@@ -366,4 +366,48 @@ public class DeviceUtil {
             }
         }
     }
+
+    /***
+     * 获取Android Linux内核版本信息
+     */
+    public void getLinuxKernalInfo() {
+        Process process = null;
+        String mLinuxKernal = null;
+        try {
+            process = Runtime.getRuntime().exec("cat /proc/version");
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // get the output line
+        InputStream outs = process.getInputStream();
+        InputStreamReader isrout = new InputStreamReader(outs);
+        BufferedReader brout = new BufferedReader(isrout, 8 * 1024);
+
+        String result = "";
+        String line;
+        // get the whole standard output string
+        try {
+            while ((line = brout.readLine()) != null) {
+                result += line;
+                // result += "\n";
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        if (result != "") {
+            String Keyword = "version ";
+            int index = result.indexOf(Keyword);
+            Log.v("cyTest", "----"+result);
+            line = result.substring(index + Keyword.length());
+            index = line.indexOf(" ");
+            // tv01.setText(line.substring(0,index));
+            mLinuxKernal = line.substring(0, index);
+
+            Log.d("cyTest", "----Linux Kernal is : " + mLinuxKernal);
+        }
+    }
 }

@@ -43,6 +43,7 @@ final class PoolSizeChanger implements IThreadBusListener {
             }
             mRuler = builder.build();
             RulerService.getInstance().startTrackingRuler(mRuler);
+            ThreadBusListenerManager.addListener(this, ThreadBusListenerManager.STATE_CHANGED);
         }
     }
 
