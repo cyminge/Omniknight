@@ -1,6 +1,6 @@
 package com.cy.omniknight.socket.message;
 
-import com.cy.omniknight.tools.StringUtil;
+import com.cy.omniknight.tools.tem.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;

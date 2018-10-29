@@ -9,7 +9,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.cy.omniknight.socket.SPushService;
-import com.cy.omniknight.tools.Utils;
 import com.cy.omniknight.tools.receiver.ReceiverManager;
 import com.cy.omniknight.tools.sharepref.SharePrefUtil;
 import com.cy.omniknight.tracer.Tracer;

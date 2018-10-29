@@ -13,7 +13,6 @@ import android.util.TypedValue;
 import android.widget.ImageView;
 
 import com.cy.omniknight.R;
-import com.cy.omniknight.tools.bitmap.BitmapCompress;
 
 
 @TargetApi(Build.VERSION_CODES.KITKAT)

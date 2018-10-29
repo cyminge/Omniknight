@@ -9,7 +9,7 @@ import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.cy.omniknight.tools.StringUtil;
+import com.cy.omniknight.tools.tem.StringUtil;
 import com.cy.omniknight.tools.runnable.TaskRunnable;
 
 /**

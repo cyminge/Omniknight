@@ -1,7 +1,6 @@
 package com.cy.omniknight.verify.picdecode;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,7 +12,6 @@ import android.widget.ImageView;
 
 import com.cy.omniknight.BaseActivity;
 import com.cy.omniknight.R;
-import com.cy.omniknight.tools.bitmap.BitmapCompress;
 
 @SuppressLint("NewApi")
 public class Activity_PicDecode extends BaseActivity implements OnClickListener {
