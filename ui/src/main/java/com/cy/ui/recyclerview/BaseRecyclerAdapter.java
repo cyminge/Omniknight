@@ -13,8 +13,6 @@ import com.cy.ui.loadmore.LoadMoreHolder;
 import com.cy.ui.loadmore.LoadMoreView;
 import com.cy.ui.loadmore.SimpleLoadMoreView;
 import com.cy.ui.multitype.BinderNotFoundException;
-import com.cy.ui.multitype.HeaderTypePool;
-import com.cy.ui.multitype.IHeaderTypePool;
 import com.cy.ui.multitype.ITypePool;
 import com.cy.ui.multitype.MultiITypePool;
 
@@ -32,15 +30,13 @@ public class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseRecyclerVie
     public static final int HEADER_ITEM_VIEW_TYPE = Integer.MAX_VALUE - 1;
     private static final int FOOTER_ITEM_VIEW_TYPE = HEADER_ITEM_VIEW_TYPE - 1000;
     private static final int LOAD_MORE_ITEM_VIEW_TYPE = FOOTER_ITEM_VIEW_TYPE - 1;
-    protected @NonNull
-    ArrayList<T> mDataArray;
-    private @NonNull
-    ITypePool mTypePool;
-    private IHeaderTypePool mHeaderTypePool;
+    protected @NonNull ArrayList<T> mDataArray;
+    private @NonNull ITypePool mBodyTypePool;
+    private ITypePool mHeaderTypePool;
+    private ITypePool mFooterTypePool;
 
-    private volatile ArrayList<Object> mHeaderViewDataArray = new ArrayList<>();
+    protected volatile ArrayList<Object> mHeaderViewDataArray = new ArrayList<>();
 
-    private View mFooterView;
     private LoadMoreView mLoadMoreView = new SimpleLoadMoreView();
     private LayoutInflater mInflater;
     private boolean mNextLoadEnable = false;
@@ -50,9 +46,6 @@ public class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseRecyclerVie
     private OnRecyclerViewClickListener mOnRecyclerViewClickListener;
 
     private BaseRecyclerViewHolder mFooterHolder;
-    private Class<? extends RecyclerView.ViewHolder> mFooterViewHolder;
-    private Object mFooterData;
-    private int mFooterViewLayoutId;
 
     public BaseRecyclerAdapter() {
         this(new ArrayList<T>());
@@ -60,8 +53,9 @@ public class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseRecyclerVie
 
     public BaseRecyclerAdapter(@NonNull ArrayList<T> items) {
         mDataArray = items;
-        mTypePool = new MultiITypePool();
-        mHeaderTypePool = new HeaderTypePool();
+        mBodyTypePool = new MultiITypePool();
+        mHeaderTypePool = new MultiITypePool();
+        mFooterTypePool = new MultiITypePool();
     }
 
     @Override
@@ -105,7 +99,7 @@ public class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseRecyclerVie
      */
     private int getMainBodyItemViewType(int position) throws BinderNotFoundException {
         Object item = mDataArray.get(position);
-        int index = mTypePool.firstIndexOf(item.getClass());
+        int index = mBodyTypePool.firstIndexOf(item.getClass());
         if (index != -1) {
             return index;
         }
@@ -127,19 +121,19 @@ public class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseRecyclerVie
             mInflater = LayoutInflater.from(parent.getContext());
         }
 
-        if (viewType > HEADER_ITEM_VIEW_TYPE - mHeaderTypePool.getHeaderTypeCounts()) {
-            holder = createHeaderHolder(mInflater, parent, viewType);
+        if (viewType > HEADER_ITEM_VIEW_TYPE - mHeaderTypePool.getTypeCounts()) {
+            holder = createViewHolder(mInflater, parent, HEADER_ITEM_VIEW_TYPE - viewType, mHeaderTypePool);
         } else {
             switch (viewType) {
                 case FOOTER_ITEM_VIEW_TYPE:
-                    holder = createFootHolder(mInflater, parent, viewType);
+                    holder = createViewHolder(mInflater, parent, FOOTER_ITEM_VIEW_TYPE - viewType, mFooterTypePool);
                     mFooterHolder = holder;
                     break;
                 case LOAD_MORE_ITEM_VIEW_TYPE:
                     holder = createLoadMoreHolder(mInflater, parent, viewType);
                     return holder;
                 default:
-                    holder = createMainBodyViewHolder(mInflater, parent, viewType);
+                    holder = createViewHolder(mInflater, parent, viewType, mBodyTypePool);
                     break;
             }
         }
@@ -148,6 +142,65 @@ public class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseRecyclerVie
             holder.itemView.setOnClickListener(this);
         }
         return holder;
+    }
+
+    private BaseRecyclerViewHolder createViewHolder(LayoutInflater inflater, ViewGroup parent, int indexViewType, ITypePool typePool) {
+        Class<?> clazz = typePool.getHolder(indexViewType);
+        Class<?>[] parameterTypes = {View.class};
+        Constructor<?> constructor;
+        try {
+            constructor = clazz.getConstructor(parameterTypes);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            Log.e(TAG, "createViewHolder 获取ViewHolder构造函数失败!clazz=" + clazz.getName());
+            return null;
+        }
+        View view = inflater.inflate(typePool.getLayoutId(indexViewType), parent, false);
+        try {
+            BaseRecyclerViewHolder holder = (BaseRecyclerViewHolder) constructor.newInstance(view);
+            holder.initItemView(this);
+            return holder;
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    protected BaseRecyclerViewHolder createLoadMoreHolder(LayoutInflater inflater, ViewGroup parent, int viewType) {
+        View view = inflater.inflate(mLoadMoreView.getLayoutId(), parent, false);
+        LoadMoreHolder holder = new LoadMoreHolder(view, mLoadMoreView);
+        holder.initItemView(this);
+        return holder;
+    }
+
+    @Override
+    public void onBindViewHolder(BaseRecyclerViewHolder viewHolder, int position) {
+        autoLoadMore(position);
+        int itemViewType = viewHolder.getItemViewType();
+        if (itemViewType > HEADER_ITEM_VIEW_TYPE - mHeaderTypePool.getTypeCounts()) {
+            bindHeaderViewData(viewHolder, position);
+        } else {
+            switch (itemViewType) {
+                case FOOTER_ITEM_VIEW_TYPE:
+                    bindFooterViewData(viewHolder, position);
+                    break;
+                case LOAD_MORE_ITEM_VIEW_TYPE:
+                    viewHolder.bindItemData(null, position);
+                    break;
+                default:
+                    bindMainItemData(viewHolder, position);
+                    break;
+            }
+        }
+        viewHolder.itemView.setTag(position);
+        viewHolder.itemView.setTag(R.id.tag_item_view, TAG_ITEM_VIEW);
     }
 
     @Override
@@ -173,125 +226,6 @@ public class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseRecyclerVie
         return v.getId() == R.id.load_more_load_fail_view;
     }
 
-    protected BaseRecyclerViewHolder createHeaderHolder(LayoutInflater inflater, ViewGroup parent, int viewType) {
-        viewType = HEADER_ITEM_VIEW_TYPE - viewType;
-        Class<?> clazz = mHeaderTypePool.getHolder(viewType);
-        Class<?>[] parameterTypes = {View.class};
-        Constructor<?> constructor;
-        try {
-            constructor = clazz.getConstructor(parameterTypes);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-            Log.e(TAG, "createHeaderHolder 获取ViewHolder构造函数失败!clazz=" + clazz.getName());
-            return null;
-        }
-        View view = inflater.inflate(mHeaderTypePool.getLayoutId(viewType), parent, false);
-        try {
-            BaseRecyclerViewHolder holder = (BaseRecyclerViewHolder) constructor.newInstance(view);
-            holder.initItemView(this);
-            return holder;
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    protected BaseRecyclerViewHolder createFootHolder(LayoutInflater inflater, ViewGroup parent, int viewType) {
-        Class<?> clazz = mFooterViewHolder;
-        try {
-            Class<?>[] parameterTypes = {View.class};
-            Constructor<?> constructor;
-            constructor = clazz.getConstructor(parameterTypes);
-
-            View view = inflater.inflate(mFooterViewLayoutId, parent, false);
-            BaseRecyclerViewHolder holder = (BaseRecyclerViewHolder) constructor.newInstance(view);
-            holder.initItemView(this);
-            return holder;
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-            Log.e(TAG, "createHeaderHolder 获取ViewHolder构造函数失败!clazz=" + clazz.getName());
-            return null;
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-
-        }
-
-        return null;
-    }
-
-    protected BaseRecyclerViewHolder createLoadMoreHolder(LayoutInflater inflater, ViewGroup parent, int viewType) {
-        View view = inflater.inflate(mLoadMoreView.getLayoutId(), parent, false);
-        LoadMoreHolder holder = new LoadMoreHolder(view, mLoadMoreView);
-        holder.initItemView(this);
-        return holder;
-    }
-
-    protected BaseRecyclerViewHolder createMainBodyViewHolder(LayoutInflater inflater, ViewGroup parent, int indexViewType) {
-        Class<?> clazz = mTypePool.getHolder(indexViewType);
-        Class<?>[] parameterTypes = {View.class};
-        Constructor<?> constructor;
-        try {
-            constructor = clazz.getConstructor(parameterTypes);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-            Log.e(TAG, "createHeaderHolder 获取ViewHolder构造函数失败!clazz=" + clazz.getName());
-            return null;
-        }
-        View view = inflater.inflate(mTypePool.getLayoutId(indexViewType), parent, false);
-        try {
-            BaseRecyclerViewHolder holder = (BaseRecyclerViewHolder) constructor.newInstance(view);
-            holder.initItemView(this);
-            return holder;
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    @Override
-    public void onBindViewHolder(BaseRecyclerViewHolder viewHolder, int position) {
-        autoLoadMore(position);
-        int itemViewType = viewHolder.getItemViewType();
-        if (itemViewType > HEADER_ITEM_VIEW_TYPE - mHeaderTypePool.getHeaderTypeCounts()) {
-            bindHeaderViewData(viewHolder, position);
-        } else {
-            switch (itemViewType) {
-                case FOOTER_ITEM_VIEW_TYPE:
-                    viewHolder.bindItemData(null, position);
-                    break;
-                case LOAD_MORE_ITEM_VIEW_TYPE:
-                    viewHolder.bindItemData(null, position);
-                    break;
-                default:
-                    bindMainItemData(viewHolder, position);
-                    break;
-            }
-        }
-        viewHolder.itemView.setTag(position);
-        viewHolder.itemView.setTag(R.id.tag_item_view, TAG_ITEM_VIEW);
-    }
-
     protected void bindHeaderViewData(BaseRecyclerViewHolder viewHolder, int position) {
         viewHolder.bindItemData(mHeaderViewDataArray.get(position), position);
     }
@@ -299,6 +233,10 @@ public class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseRecyclerVie
     protected void bindMainItemData(BaseRecyclerViewHolder viewHolder, int position) {
         Object item = getItemData(position);
         viewHolder.bindItemData(item, position);
+    }
+
+    protected void bindFooterViewData(BaseRecyclerViewHolder viewHolder, int position) {
+        viewHolder.bindItemData(null, position);
     }
 
     public interface RequestLoadMoreListener {
@@ -444,7 +382,7 @@ public class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseRecyclerVie
     }
 
     public int getFooterViewCount() {
-        return 0 != mFooterViewLayoutId ? 1 : 0;
+        return null != mFooterTypePool ? 1 : 0;
     }
 
     public int getLoadMoreViewCount() {
@@ -540,8 +478,7 @@ public class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseRecyclerVie
         }
     }
 
-    public @NonNull
-    List<T> getDatas() {
+    public @NonNull List<T> getDatas() {
         return mDataArray;
     }
 
@@ -558,11 +495,11 @@ public class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseRecyclerVie
      */
     public <T> void register(Class<? extends T> dataStructure, Class<? extends RecyclerView.ViewHolder> holder, int layoutId) {
         checkAndRemoveAllTypesIfNeeded(dataStructure);
-        mTypePool.register(dataStructure, holder, layoutId);
+        mBodyTypePool.register(dataStructure, holder, layoutId);
     }
 
     private void checkAndRemoveAllTypesIfNeeded(@NonNull Class<?> clazz) {
-        if (mTypePool.unregister(clazz)) {
+        if (mBodyTypePool.unregister(clazz)) {
             Log.w(TAG, "You have registered the " + clazz.getSimpleName() + " type. " +
                     "It will override the original binder(s).");
         }
@@ -572,9 +509,14 @@ public class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseRecyclerVie
         mHeaderTypePool.register(dataStructure, holder, layoutId);
     }
 
+    /**
+     * 请注意 该框架只支持一个FooterView，并且只支持静态view，不支持动态数据
+     * @param dataStructure
+     * @param holder
+     * @param layoutId
+     */
     public void registerFooterView(Class<?> dataStructure, Class<? extends RecyclerView.ViewHolder> holder, int layoutId) {
-        mFooterData = dataStructure;
-        mFooterViewHolder = holder;
-        mFooterViewLayoutId = layoutId;
+        mFooterTypePool.clear();
+        mFooterTypePool.register(dataStructure, holder, layoutId);
     }
 }

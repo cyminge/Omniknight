@@ -33,9 +33,11 @@ public interface ITypePool {
      * @param <T> the item data type
      */
     <T, V> void register(
-            @NonNull Class<? extends T> itemData,
+            Class<? extends T> itemData,
             @NonNull Class<? extends V> holder,
             @NonNull int layoutId);
+
+    void clear();
 
     /**
      * Unregister all items with the specified class.
@@ -74,5 +76,7 @@ public interface ITypePool {
 
     @NonNull
     int getLayoutId(int index);
+
+    int getTypeCounts();
 
 }

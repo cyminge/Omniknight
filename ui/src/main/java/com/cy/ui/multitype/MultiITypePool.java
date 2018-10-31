@@ -28,42 +28,31 @@ import java.util.List;
  */
 public class MultiITypePool implements ITypePool {
 
-    private @NonNull
-    final List<Class<?>> mItemDatas;
-    private @NonNull
-    final List<Class<?>> mHolders;
-    private @NonNull
-    final List<Integer> mLayoutId;
+    private @NonNull final List<Class<?>> mItemDatas;
+    private @NonNull final List<Class<?>> mHolders;
+    private @NonNull final List<Integer> mLayoutIds;
 
     public MultiITypePool() {
         this.mItemDatas = new ArrayList<>();
         this.mHolders = new ArrayList<>();
-        this.mLayoutId = new ArrayList<>();
-    }
-
-    public MultiITypePool(int initialCapacity) {
-        this.mItemDatas = new ArrayList<>(initialCapacity);
-        this.mHolders = new ArrayList<>(initialCapacity);
-        this.mLayoutId = new ArrayList<>(initialCapacity);
-    }
-
-    public MultiITypePool(
-        @NonNull List<Class<?>> itemDatas,
-        @NonNull List<Class<?>> holders,
-        @NonNull List<Integer> layoutId) {
-        this.mItemDatas = itemDatas;
-        this.mHolders = holders;
-        this.mLayoutId = layoutId;
+        this.mLayoutIds = new ArrayList<>();
     }
 
     @Override
     public <T, V> void register(
-        @NonNull Class<? extends T> clazz,
-        @NonNull Class<? extends V> holders,
+        Class<? extends T> itemData,
+        @NonNull Class<? extends V> holder,
         @NonNull int layoutId) {
-        mItemDatas.add(clazz);
-        mHolders.add(holders);
-        mLayoutId.add(layoutId);
+        mItemDatas.add(itemData);
+        mHolders.add(holder);
+        mLayoutIds.add(layoutId);
+    }
+
+    @Override
+    public void clear() {
+        mItemDatas.clear();
+        mHolders.clear();
+        mLayoutIds.clear();
     }
 
     @Override
@@ -74,7 +63,7 @@ public class MultiITypePool implements ITypePool {
             if (index != -1) {
                 mItemDatas.remove(index);
                 mHolders.remove(index);
-                mLayoutId.remove(index);
+                mLayoutIds.remove(index);
                 removed = true;
             } else {
                 break;
@@ -102,20 +91,22 @@ public class MultiITypePool implements ITypePool {
     }
 
     @Override
-    public @NonNull
-    Class<?> getItemData(int index) {
+    public Class<?> getItemData(int index) {
         return mItemDatas.get(index);
     }
 
     @Override
-    public @NonNull
-    Class<?> getHolder(int index) {
+    public @NonNull Class<?> getHolder(int index) {
         return mHolders.get(index);
     }
 
-    @NonNull
     @Override
-    public int getLayoutId(int index) {
-        return mLayoutId.get(index);
+    public @NonNull int getLayoutId(int index) {
+        return mLayoutIds.get(index);
+    }
+
+    @Override
+    public int getTypeCounts() {
+        return mHolders.size();
     }
 }
