@@ -11,6 +11,8 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Window;
 
+import com.cy.statistics.StatisticsManager;
+
 /**
  * Activity基类
  * 
@@ -76,7 +78,7 @@ public class BaseActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		StatisticsManager.getInstance().onPageStart(this, "");
 		// getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
 	}
@@ -84,6 +86,7 @@ public class BaseActivity extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		StatisticsManager.getInstance().onPageEnd(this, "");
 	}
 
 	/**

@@ -335,7 +335,7 @@ public final class NetworkUtils {
     }
 
     @RequiresPermission(ACCESS_NETWORK_STATE)
-    private static NetworkInfo getActiveNetworkInfo() {
+    public static NetworkInfo getActiveNetworkInfo() {
         ConnectivityManager cm =
                 (ConnectivityManager) Utils.getApp().getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm == null) return null;

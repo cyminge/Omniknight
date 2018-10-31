@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#e8e8e8" />
+            <corners android:radius="@dimen/app_dp_17" />
+        </shape>
+    </item>
+    <item>
+        <clip
+            android:clipOrientation="horizontal"
+            android:drawable="@drawable/app_download_blue_chunk"
+            android:gravity="left">
+        </clip>
+    </item>
+
+</layer-list>

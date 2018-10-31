@@ -1,3 +1,33 @@
 <resources>
     <string name="app_name">Downloader</string>
+
+    <string name="app_traffic_remind_title">下载提醒</string>
+    <string name="app_traffic_remind_content">当前网络为移动数据网络，%1$s建议连接WLAN后自动下载</string>
+    <string name="app_traffic_remind_positive_text">土豪下载</string>
+    <string name="app_traffic_remind_negative_text">等待WLAN</string>
+
+    <string name="app_download_now">立即下载</string>
+    <string name="app_open_now">立即打开</string>
+    <string name="app_download_continue">继续下载</string>
+    <string name="app_install_now">立即安装</string>
+    <string name="app_installing">安装中</string>
+
+    <string name="app_click_pause_download">点击暂停下载</string>
+    <string name="app_downloading">正在下载</string>
+    <string name="app_click_continue_download">点击继续下载</string>
+    <string name="app_pause_download">暂停下载</string>
+    <string name="app_click_install">点击安装</string>
+    <string name="app_downloaded">下载完成</string>
+    <string name="app_waiting">等待下载中</string>
+    <string name="app_click_open_apk">点击打开应用</string>
+    <string name="app_apk_installed">应用安装完成</string>
+    <string name="app_click_start_download">点击开始下载</string>
+    <string name="app_ready_download">准备开始下载</string>
+    <string name="app_start_download">开始下载</string>
+    <string name="app_continue_download">继续下载</string>
+    <string name="app_click_download">立即下载</string>
+    <string name="app_click_open">点击打开</string>
+    <string name="app_open">立即打开</string>
+    <string name="app_cancel_download">取消下载</string>
+    <string name="app_download_notification_tip">下载提示通知</string>
 </resources>

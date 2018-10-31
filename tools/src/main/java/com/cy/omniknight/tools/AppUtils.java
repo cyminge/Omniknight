@@ -634,6 +634,15 @@ public final class AppUtils {
         }
     }
 
+    public static String getAppSignatureByPath(PackageManager pm, String path) {
+        try {
+            PackageInfo pkgInfo = pm.getPackageArchiveInfo(path, PackageManager.GET_SIGNATURES);
+            return pkgInfo.signatures[0].toCharsString();
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
     /**
      * Return the application's signature for SHA1 value.
      *

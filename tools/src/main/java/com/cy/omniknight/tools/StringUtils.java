@@ -1,5 +1,18 @@
 package com.cy.omniknight.tools;
 
+import android.content.Context;
+import android.util.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
 /**
  * <pre>
  *     author: Blankj
@@ -189,5 +202,197 @@ public final class StringUtils {
             }
         }
         return new String(chars);
+    }
+
+    /* Convert a object to string in base64 */
+    public static String objectToString(Serializable obj) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(
+                    new Base64OutputStream(baos, android.util.Base64.NO_PADDING | android.util.Base64.NO_WRAP));
+            oos.writeObject(obj);
+            oos.close();
+            return baos.toString("UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /* convert a base64 String to Object */
+    public static Object stringToObject(String str) {
+        try {
+            return new ObjectInputStream(new Base64InputStream(
+                    new ByteArrayInputStream(str.getBytes()), android.util.Base64.NO_PADDING
+                    | android.util.Base64.NO_WRAP)).readObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 解析转义字符为符号
+     *
+     * @param str
+     * @return
+     */
+    public static String parseESC2Symbol(String str) {
+        str = str.replace("&amp;", "&");
+        str = str.replace("&lt;", "<");
+        str = str.replace("&gt;", ">");
+        str = str.replace("&quot;", "\"");
+        str = str.replace("&nbsp;", " ");
+        str = str.replace("&copy;", "©");
+        str = str.replace("&reg;", "®");
+        str = str.replace("&apos;", "'");
+        return str;
+    }
+
+    /**
+     * 获取带参数的字符串资源
+     *
+     * @param context
+     * @param params
+     * @return
+     */
+    public static String getResourceStringWithParam(Context context, int id, Object... params) {
+        String formatString = context.getResources().getString(id);
+        return String.format(formatString, params);
+    }
+
+    public static boolean compare(Integer integer1, Integer integer2) {
+        boolean bRet = false;
+        if (null == integer1) {
+            if (null == integer2) {
+                bRet = true;
+            }
+        }
+        else {
+            if (null != integer2) {
+                bRet = (0 == integer1.compareTo(integer2));
+            }
+        }
+        return bRet;
+    }
+
+    public static boolean compare(Long integer1, Long integer2) {
+        boolean bRet = false;
+        if (null == integer1) {
+            if (null == integer2) {
+                bRet = true;
+            }
+        }
+        else {
+            if (null != integer2) {
+                bRet = (0 == integer1.compareTo(integer2));
+            }
+        }
+        return bRet;
+    }
+
+    public static boolean compare(String str1, String str2) {
+        boolean bRet = false;
+        if (null == str1) {
+            if (null == str2) {
+                bRet = true;
+            }
+        }
+        else {
+            if (null != str2) {
+                bRet = str1.equals(str2);
+            }
+        }
+        return bRet;
+    }
+
+    /**
+     * Judge parameter string is a numeric string or not
+     *
+     * @param string
+     * @return
+     */
+    public static boolean isNumeric(String string) {
+        for (int i = string.length(); --i >= 0;) {
+            if (!Character.isDigit(string.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 解析html标签
+     * 这个方法不正确，别使用
+     *
+     * @param str
+     * @return
+     */
+    public static String parseLabel2Null(String str) {
+        str = str.replace("^</?[a-z]+>$", "");
+        return str;
+    }
+
+    /**
+     * 匹配汉字数字字母
+     *
+     * @param str
+     * @return
+     */
+    public static boolean isRegularMatch_Ch_num_Let(String str) {
+        String regular = "^[\u4e00-\u9fa5a-zA-Z0-9]+$";
+        Pattern p = Pattern.compile(regular);
+        Matcher m = p.matcher(str);
+
+        return m.matches();
+    }
+
+    /**
+     * 匹配字母斜杠
+     *
+     * @param str
+     * @return
+     */
+    public static boolean isRegularMatch_Let_sprit(String str) {
+        String regular = "^</?[a-z]+>$";
+        Pattern p = Pattern.compile(regular);
+        Matcher m = p.matcher(str);
+
+        return m.matches();
+    }
+
+    /**
+     * 判断字符串中是否包含中文
+     *
+     * @param str
+     * @return
+     */
+    public static boolean isContainGBK(String str) {
+        int count = 0;
+        String regEx = "[\\u4e00-\\u9fa5a]";
+        Pattern p = Pattern.compile(regEx);
+        Matcher m = p.matcher(str);
+        while (m.find()) {
+            for (int i = 0; i <= m.groupCount(); i++) {
+                count = count + 1;
+            }
+        }
+        System.out.println("共有 " + count + "个 ");
+        return m.matches();
+    }
+
+    /**
+     * 特殊字符过滤
+     *
+     * @param str
+     * @return
+     * @throws PatternSyntaxException
+     */
+    public static String stringFilter(String str) throws PatternSyntaxException {
+//        String regEx = "[/\\:*%?<>|\"\n\t]";
+        String regEx = "[/\\%<>|\"\n\t]";
+        Pattern p = Pattern.compile(regEx);
+        Matcher m = p.matcher(str);
+        return m.replaceAll("");
     }
 }

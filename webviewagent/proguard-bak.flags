@@ -1,0 +1,262 @@
+# proguard 四个功能：shrinker（压缩）、optimizer（优化）、obfuscator（混淆）、preverifier（预校验）
+
+#输入输出选项
+#递归引入目录的配置文件
+#-include filename
+#为所有引用的相对路径指定一个根路径
+#-basedirectory directoryname
+指定应用程序要处理的jars包（或者wars、ears、zip、或者目录结构），它们里面的class文件会被处理并被写入到输出jars里面。它们里面的任何非class文件会被直接复制过去但是不会处理。（需要注意过滤调一些IDE自动生成的文件）；
+#-injars class_path
+#指定输出jars(wars、ears、zip、目录结构)的名称；由-injars 指定的被处理的jars将被写入到指定的输出jars里。如果不指定outjars将不会有class文件被写入。
+#-outjars class_path
+#不混淆指定的jar库(android 项目中一般不混淆引入的第三方类库)
+#-libraryjars class_path
+#为了加快运行和减少proguard的使用内存，当读取library jars指定跳过non-public 类。在默认情况下ProGuard读取non-public 和public类一样，然而，如果它们没有影响输入jar里面的的程序代码，non-public 类通常是不相关的。在没有影响输出的情况下，忽略它们来加速Proguard.不幸的是，一些库，包括最近 的JSE run-time 库，包含一些非public class继承自公共的library classes，那在这种情况下你不能使用这个option。在使用这个选项ProGuard将打印出警告当找不到类的时候。
+#-skipnonpubliclibraryclasses
+#====================================不忽略指定jars中的非public calsses （默认选项）和上面的选项相对应 （指定不去忽略非公共库的类），建议使用这个选项
+-dontskipnonpubliclibraryclasses
+#不忽略指定类库的public类成员（变量和方法），默认情况下，ProGuard会忽略他们 （指定不去忽略包可见的库类的成员）
+#-dontskipnonpubliclibraryclassmembers
+#指定要保持的目录结构，默认情况下会删除所有目录以减小jar的大小。
+#-keepdirectories [directory_filter]
+#指定java版本号。 版本号可以是1.0,1.1,1.2,1.3,1.4,1.5（或仅5），1.6（或仅6）或1.7（或仅7）中的一个。 默认情况下，类文件的版本号保持不变。 例如，您可能想要将类文件升级到Java 6，通过更改其版本号并对其进行预验证。
+#-target version
+#强制处理输入（-injars）jars。即使输出jars是最新的。通过指定的输入，输出和配置文件或者目录的时间戳判断是否最新。
+#-forceprocessing
+
+#保留选项
+#指定需要保留的类和类成员（作为公共类库，应该保留所有可公开访问的public方法）
+#-keep [,modifier，...] class_specification
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Application
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keep public class * extends android.app.backup.BackupAgentHelper
+-keep public class * extends android.preference.Preference
+
+-keep class * implements android.os.Parcelable {
+    public static final android.os.Parcelable$Creator *;
+}
+
+#指定需要保留的类成员:变量或者方法
+#-keepclassmembers [,modifier，...] class_specification
+-keepclassmembers class * extends android.app.Activity {
+    public void *(android.view.View);
+}
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+#指定保留的类和类成员，条件是所指定的类成员都存在（既在压缩阶段没有被删除的成员，效果和keep差不多）
+#-keepclasseswithmembers [,modifier，...] class_specification
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+-keepclasseswithmembers class * {
+    public <init>(android.content.Context, android.util.AttributeSet);
+}
+-keepclasseswithmembers class * {
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+#指定要保留名称的类和类成员，前提是在压缩阶段未被删除。仅用于模糊处理[-keep allowshrinking class_specification 的简写]
+#-keepnames class_specification
+#指定要保留名称的类成员，前提是在压缩阶段未被删除。仅用于模糊处理[-keepclassmembers allowshrinking class_specification 的简写]
+#-keepclassmembernames class_specification
+#指定要保留名称的类成员，前提是在压缩阶段后所指定的类成员都存在。仅用于模糊处理[-keepclasseswithmembers allowshrinking class_specification 的简写]
+#-keepclasseswithmembernames class_specification
+#指定详尽列出由各种-keep选项匹配的类和类成员。 列表打印到标准输出或给定文件。 该列表可用于验证是否真的找到了预期的类成员，特别是如果您使用通配符。 例如，您可能想要列出所有应用程序或您保存的所有小程序。
+#-printseeds [filename]
+
+
+#压缩
+#不压缩输入的类文件，据说这个在某些rom上会有问题
+#-dontshrink
+#列出从apk中删除的代码，适用于打开了压缩选项
+-printusage unused.txt
+#打印指定的类在压缩阶段为什么会保留其类、类成员的详细信息
+#-whyareyoukeeping {class_specification}
+
+#优化
+#不优化输入的类文件，据说这个在某些rom上会有问题
+#-dontoptimize
+#代码混淆压缩比，在0~7之间，默认为5，一般不做修改
+-optimizationpasses 5
+# 混淆时所采用的算法
+-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
+#优化时假设指定的方法，没有任何副作用，不能与-dontoptimize共用，建议不用  比如 -assumenosideeffects class android.util.Log
+#-assumenosideeffects {class_specification}
+#指示容许修改类和类成员的访问修饰符，这可以改进优化结果。
+-allowaccessmodification
+#指示容许合并接口，即使他们的实现类没有实现所有接口方法。这个可以减少类的总数来减小输出的大小。仅实用于优化
+-mergeinterfacesaggressively
+
+
+#混淆
+#不混淆输入的类文件 （混淆默认是开启的）
+#-dontobfuscate
+#混淆前后的映射
+-printmapping mapping.txt
+#指定文件为映射文件，混淆时映射文件中列出的类和类成员接收指定的名称，文件未提及的类和类成员接收新名称。
+#-applymapping [filename]
+#使用给定文件中的关键字作为要混淆方法的名称，可以减少类文件的大小。 仅适用于混淆处理。
+#-obfuscationdictionary {filename}
+#指定一个文本文件，其中所有有效词都用作混淆类名。 与-obfuscationdictionary类似。 仅适用于混淆处理。
+#-classobfuscationdictionary [filename]
+#指定一个文本文件，其中所有有效词都用作混淆包名称。与-obfuscationdictionary类似。 仅适用于混淆处理。
+#-packageobfuscationdictionary [filename]
+#混淆的时候大量使用重载，多个方法名使用同一个混淆名，但是他们的方法签名不同。这可以使包的体积减小一部分，也可以加大理解的难度。仅在混淆阶段有效。
+#但该方法有一些问题，不建议使用，要用的话需要多验证
+#-overloadaggressively
+#确定统一的混淆类的成员名称来增加混淆
+-useuniqueclassmembernames
+#混合时不使用大小写混合，混合后的类名为小写
+-dontusemixedcaseclassnames
+#指定不混淆给定的包名称。package_filter过滤器是以逗号分隔的包名称列表。包名称可以包含 ?、 * 、 ** 通配符。仅适用于混淆处理。
+#-keeppackagenames [package_filter]
+#将所有重命名后的包移动到给定的包中重新打包，如果没有参数或者空字符串，包将被移动到根包中，此选项进一步混淆包名称，可以使代码跟小更不易理解。仅适用于混淆处理。
+#-flattenpackagehierarchy {package_name}
+#重新打包所有重命名的类文件，将它们移动到给定包中。 如果包中没有参数或一个空字符串，包被完全删除。 此选项将覆盖-flattenpackagehierarchy选项。 它可以使处理后的代码更小，更不容易理解。 它的已弃用名称是-defaultpackage。 仅适用于混淆处理。
+#-repackageclasses [package_name]
+#保护给定的可选属性，例如LineNumberTable, LocalVariableTable, SourceFile, Deprecated, Synthetic, Signature, and InnerClasses.
+#-keepattributes {attribute_name,…}
+#抛出异常时保留代码行号
+-keepattributes SourceFile,LineNumberTable
+#保留Annotation不混淆
+-keepattributes *Annotation*,InnerClasses
+#避免混淆泛型
+-keepattributes Signature
+-keepattributes Exceptions
+-keepattributes EnclosingMethod
+-keepattributes *JavascriptInterface*
+#指定保留参数名称和保留的方法类型。 此选项实际上保留调试属性LocalVariableTable和LocalVariableTypeTable的修剪版本。 它在处理库时很有用。 一些IDE可以使用该信息来帮助使用库的开发人员，例如使用工具提示或自动完成。仅适用于混淆处理。
+-keepparameternames
+#指定要放在类文件的SourceFile属性（和SourceDir属性）中的常量字符串。 请注意，该属性必须以开头存在，因此也必须使用-keepattributes指令明确保留。 例如，您可能希望使已处理的库和应用程序生成有用的混淆堆栈跟踪。仅适用于混淆处理。
+#-renamesourcefileattribute {string}
+#-renamesourcefileattribute SourceFile
+#混淆和类名称对应的字符串常量，如果没有filter则匹配与类名称相对应的所有字符串常量，使用filter则仅匹配与filter匹配的类中的字符串常量。 仅适用于混淆处理。
+#-adaptclassstrings [class_filter]
+#根据相应类文件（如果有）的混淆名称指定要重命名的资源文件。 如果没有过滤器，则重命名与类文件相对应的所有资源文件。 使用过滤器，仅重命名匹配的文件。仅适用于混淆处理。
+#-adaptresourcefilenames [file_filter]
+#指定要更新其内容的资源文件。 根据相应类的混淆名称（如果有）重命名资源文件中提到的任何类名。 如果没有过滤器，所有资源文件的内容都会更新。 使用过滤器，仅更新匹配的文件。 资源文件使用平台的默认字符集进行解析和编写。 您可以通过设置环境变量LANG或Java系统属性file.encoding来更改此默认字符集。 仅适用于混淆处理。
+#-adaptresourcefilecontents [file_filter]
+
+#预校验
+#指定不对处理后的类文件进行预校验。默认情况下如果类文件的目标平台是 Java Micro Edition 或 Java 6 或更高时会进行预校验。目标平台是 Android 时没必要开启，关闭可减少处理时间。
+-dontpreverify
+指定处理后的类文件目标平台是 Java Micro Edition。
+#-microedition
+
+#通用配置
+#混淆过程中打印详细信息，如果异常终止则打印整个堆栈信息
+-verbose
+#不打印配置类中可能的错误或遗漏的注释，如类名称中的拼写错误，或者可能有用的缺失选项。 可选class_filter是正则表达式; ProGuard不打印关于具有匹配名称的类的注释。
+#-dontnote [class_filter]
+#不对指定的类、包中的不完整的引用发出警告
+#-dontwarn [class_filter]
+#-dontwarn android.support.v4.**
+#忽略警告继续处理
+-ignorewarnings
+#打印配置信息，到指定文件。包括文件和替换的变量
+#-printconfiguration [filename]
+#打印类文件内部结构到指定文件
+#-dump [filename]
+
+
+#retrofit
+-dontwarn retrofit2.**
+-keep class retrofit2.** { *; }
+
+-dontwarn com.gionee.gncustomerservice.aidl.**
+-keep class com.gionee.gncustomerservice.aidl.** { *;}
+
+-libraryjars libs/huanju-data.jar
+
+
+-keep public class gn.com.android.gamehall.common.NormalTabInfo {*;}
+-keep public class gn.com.android.gamehall.common.MainTabInfo {*;}
+-keep public class gn.com.android.gamehall.category.CategoryData {*;}
+-keep public class gn.com.android.gamehall.downloadmanager.DownloadRequest {*;}
+-keep public class gn.com.android.gamehall.downloadmanager.DownloadInfo {*;}
+-keep public class android.support.v4.view.** {*; } 
+-keep public class android.support.v13.app.** {*; } 
+-keep public class com.gionee.appupgrade.** {*; } 
+-keep public class com.gionee.patchapply.** {*; } 
+-keep public class gn.com.android.gamehall.R {*;}
+-keep public class gn.com.android.gamehall.ui.NetWebViewChromeClient {*;}
+-keep public class gn.com.android.gamehall.GNCordovaActivity {*;}
+-keep public class com.tencent.mm.** {*; } 
+-keep public class com.sina.weibo.** {*; } 
+-keep public class com.gionee.account.** {*; } 
+-keep public class com.youju.statistics.** {*; } 
+-keep public class com.fasterxml.jackson.** {*; } 
+-keep class com.igexin.** {*; }
+-keep class com.xunlei.** {*; }
+-keep class org.apache.http.** {*; }
+-keep class com.android.providers.downloads.** {*; }
+-keep class com.google.zixing.**{*; }
+-keep public class com.huanju.**{ *; }
+
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+
+-keepclassmembers class * extends android.app.Activity {
+    public void *(android.view.View);
+}
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valuesOf(java.lang.string);
+}
+
+-keep class * implements android.os.Parelable {
+    public static final android.os.Parcelable$Creator *;
+}
+
+-keepclassmembers class * {
+   public <init>(org.json.JSONObject);
+}
+
+-keep public class gn.com.android.gamehall.R$*{
+    public static final int *;
+}
+
+-keep class com.qq.e.** { 
+    public protected *; 
+}
+-keep class android.support.v4.app.NotificationCompat**{
+    public *;
+}
+
+-keepclassmembers class com.gionee.ad.nativ.GioneeNativeAdDataHolder {  
+   public *;  
+}
+
+-keep class com.gionee.ad.** { 
+    public <methods>; 
+}
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+-keepattribute Signature
+-keepattribute Deprecated
+-dontwarn com.android.volley.NetworkDispatcher
+
+-dontwarn android.support.v4.** 
+-dontwarn com.sina.weibo.**
+-dontwarn com.gionee.account.**
+-dontwarn org.eclipse.jdt.annotation.**
+-dontwarn com.fasterxml.jackson.**
+-dontwarn com.tencent.mm.**
+-dontwarn com.igexin.**
+-dontwarn com.xunlei.**
+-dontwarn org.apache.http.**
+-dontwarn com.google.zixing.**
+
+
+
+

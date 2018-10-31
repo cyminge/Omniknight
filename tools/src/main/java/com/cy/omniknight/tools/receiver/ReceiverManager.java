@@ -13,6 +13,8 @@ import java.util.HashMap;
 public final class ReceiverManager {
 
     public static final String CHANGE_TYPE_NETWORK = "networkChanged";
+    public static final String CHANGE_TYPE_TIME = "timeChanged";
+    public static final String CHANGE_TYPE_PACKAGE = "packageChanged";
 
     private HandlerThread mHandlerThread;
     private volatile Handler mSubThreadHandler;
@@ -34,13 +36,15 @@ public final class ReceiverManager {
 
         mStateControllers = new HashMap<>();
         addController(CHANGE_TYPE_NETWORK, new ConnectivityController(context));
+        addController(CHANGE_TYPE_TIME, new TimeChangeController(context));
+        addController(CHANGE_TYPE_PACKAGE, new PackageChangeController(context));
     }
 
     public void addController(String changeType, ReceiverStateController stateController) {
-        if(null == mStateControllers) {
-            return;
-        }
         synchronized (mStateControllers) {
+            if(null == mStateControllers) {
+                return;
+            }
             if (mStateControllers.containsKey(changeType)) {
                 return;
             }
@@ -49,20 +53,20 @@ public final class ReceiverManager {
     }
 
     public void startTracking(String changeType, StateChangedListener listener) {
-        if(null == mStateControllers || !mStateControllers.containsKey(changeType)) {
-            return;
-        }
         synchronized (mStateControllers) {
+            if(null == mStateControllers || !mStateControllers.containsKey(changeType)) {
+                return;
+            }
             ReceiverStateController controller = mStateControllers.get(changeType);
             controller.startTracking(listener);
         }
     }
 
     public void stopTracking(String changeType, StateChangedListener listener) {
-        if(null == mStateControllers || !mStateControllers.containsKey(changeType)) {
-            return;
-        }
         synchronized (mStateControllers) {
+            if(null == mStateControllers || !mStateControllers.containsKey(changeType)) {
+                return;
+            }
             ReceiverStateController controller = mStateControllers.get(changeType);
             controller.stopTracking(listener);
         }

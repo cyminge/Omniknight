@@ -8,11 +8,7 @@ import android.support.multidex.MultiDex;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.cy.omniknight.socket.SPushService;
-import com.cy.omniknight.tools.receiver.ReceiverManager;
-import com.cy.omniknight.tools.sharepref.SharePrefUtil;
 import com.cy.omniknight.tracer.Tracer;
-import com.gionee.threadbus.ThreadBus;
 
 public class BaseApplication extends Application {
 
@@ -30,11 +26,7 @@ public class BaseApplication extends Application {
             }
         }
 
-        ThreadBus.init(this); // 线程池入口函数
-		Tracer.init(this);
-        SharePrefUtil.init(this);
-        ReceiverManager.getInstance().init(this);
-        SPushService.startPushServer(this);
+        WatchDog.init(this);
 	}
 
     @Override

@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 public class myClass {
 
@@ -68,10 +69,20 @@ public class myClass {
 //            e.printStackTrace();
 //        }
 
-        System.out.println("0x2D92B5:"+0x2D92B5);
-        System.out.println("0x100000:"+0x100000);
+//        String aa = "START u0 {act=android.intent.action.VIEW flg=0x10000000 cmp=com.tencent.mm/.plugin.webview.ui.tools.WebViewUI (has extras)} from uid 10008 pid 29198 on display 0\n";
+//        String aa = "START u0 {dat=gngamehall://ActivityDetailView?packageName=XXX&gameId=9136&contentId=146&from=XXX flg=0x10000000 cmp=gn.com.android.gamehall/.detail.EventDetailActivity} from uid 10206 pid 21309 on display 0";
+        String aa = "START u0 {act=android.intent.action.VIEW dat=gngamehall://ForumView?packageName=XXX&from=XXX flg=0x10000000 cmp=gn.com.android.gamehall/.ThirdAppEntryActivity} from uid 10206 pid 21309 on display 0";
 
+
+        boolean isMatch1 = sDeepLinkPattern1.matcher(aa).find();
+        boolean isMatch2 = sDeepLinkPattern2.matcher(aa).find();
+
+        System.out.println("isMatch1:"+isMatch1);
+        System.out.println("isMatch2:"+isMatch2);
     }
+
+    private static final Pattern sDeepLinkPattern1 = Pattern.compile(".* \\{act=android.intent.action.VIEW dat=.*");
+    private static final Pattern sDeepLinkPattern2 = Pattern.compile(".*dat=.+://.+");
 
     class Param {
         String url;

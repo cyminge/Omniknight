@@ -11,8 +11,10 @@ import android.graphics.Point;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.annotation.RequiresPermission;
 import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.Surface;
 import android.view.View;
 import android.view.Window;
@@ -50,6 +52,21 @@ public final class ScreenUtils {
             wm.getDefaultDisplay().getSize(point);
         }
         return point.x;
+    }
+
+    public static int getDisplayWidth(Context context) {
+        DisplayMetrics dm;
+        int jellyBean_4_2 = 17;// android.os.Build.VERSION_CODES.JELLY_BEAN_MR1
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            Display display = wm.getDefaultDisplay();
+            dm = new DisplayMetrics();
+            display.getRealMetrics(dm);
+        } else {
+            dm = context.getResources().getDisplayMetrics();
+        }
+        return dm.widthPixels;
+
     }
 
     /**

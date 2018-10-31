@@ -254,6 +254,17 @@ public final class PhoneUtils {
     }
 
     /**
+     * 获取设备型号
+     *
+     * @return
+     */
+    @SuppressLint("MissingPermission")
+    public static String getDeviceModel(Context context) {
+        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        return tm.getDeviceSoftwareVersion();
+    }
+
+    /**
      * Skip to dial.
      *
      * @param phoneNumber The phone number.

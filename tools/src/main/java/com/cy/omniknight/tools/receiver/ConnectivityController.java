@@ -7,9 +7,9 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
-import com.cy.omniknight.tools.tem.StringUtil;
+import com.cy.omniknight.tools.NetworkUtils;
+import com.cy.omniknight.tools.Utils;
 import com.cy.omniknight.tools.runnable.TaskRunnable;
 
 /**
@@ -26,6 +26,7 @@ public final class ConnectivityController extends ReceiverStateController {
     public static final int CUSTOM_NETWORK_TYPE_NONE = -1;
 
     private NetworkTracer mNetworkTracer;
+    private static volatile int mCustomNetworkType;
 
     public ConnectivityController(Context context) {
         super(context);
@@ -44,8 +45,12 @@ public final class ConnectivityController extends ReceiverStateController {
     @Override
     public void stopTracking(StateChangedListener stateChangedListener) {
         mStateChangedListenerArray.remove(stateChangedListener);
-        if (null != mNetworkTracer) {
-            mNetworkTracer.stopTracking();
+        // 不需要反注册
+        if(mStateChangedListenerArray.size() == 0) {
+            if (null != mNetworkTracer) {
+                mNetworkTracer.stopTracking();
+                mNetworkTracer = null;
+            }
         }
     }
 
@@ -53,12 +58,10 @@ public final class ConnectivityController extends ReceiverStateController {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("cyTest", "NetWork State Changed");
             onNetworkChanged();
         }
 
         private void startTracking() {
-            Log.d("cyTest", "ConnectivityController startTracking");
             IntentFilter filter = getFilter();
             mContext.registerReceiver(this, filter);
         }
@@ -74,7 +77,7 @@ public final class ConnectivityController extends ReceiverStateController {
         }
     }
 
-    private void onNetworkChanged() {
+    public void onNetworkChanged() {
         ReceiverManager.getSubThreadHandler().removeCallbacks(mNetWorkChangedRunnable);
         ReceiverManager.getSubThreadHandler().postDelayed(mNetWorkChangedRunnable, 1000);
     }
@@ -82,9 +85,9 @@ public final class ConnectivityController extends ReceiverStateController {
     private TaskRunnable mNetWorkChangedRunnable = new TaskRunnable("Check&Update NetWork State") {
         @Override
         public void runTask() {
-            NetworkInfo info = StringUtil.getNetworkInfo(mContext);
+            NetworkInfo info = NetworkUtils.getActiveNetworkInfo();
             int networkType = getCustomNetworkType(info);
-
+            mCustomNetworkType = networkType;
             updateNetworkState(networkType, info);
         }
     };
@@ -138,6 +141,40 @@ public final class ConnectivityController extends ReceiverStateController {
                 mStateChangedListenerArray.get(i).onStateChanged(ReceiverManager.CHANGE_TYPE_NETWORK, customNetworkType, info);
             }
         }
+    }
 
+    /**
+     * 是否网络处于连接状态
+     * @return
+     */
+    public static boolean isNetworkConnected() {
+        return mCustomNetworkType != CUSTOM_NETWORK_TYPE_NONE;
+    }
+
+    /**
+     * 是否网络处于wifi状态
+     * @return
+     */
+    public static boolean isWifiNetwork() {
+        return mCustomNetworkType == CUSTOM_NETWORK_TYPE_WIFI;
+    }
+
+    public static String getNetworkType() {
+        switch (mCustomNetworkType) {
+            case CUSTOM_NETWORK_TYPE_WIFI :
+                return "wifi";
+            case CUSTOM_NETWORK_TYPE_4G :
+                return "4G";
+            case CUSTOM_NETWORK_TYPE_3G :
+                return "3G";
+            case CUSTOM_NETWORK_TYPE_2G :
+                return "2G";
+            case CUSTOM_NETWORK_TYPE_UNKNOWN :
+                return "unknown";
+            case CUSTOM_NETWORK_TYPE_NONE :
+                return "none";
+        }
+
+        return "unknown";
     }
 }

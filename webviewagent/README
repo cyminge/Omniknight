@@ -1,0 +1,17 @@
+20171017
+待完成：
+1. 支持Fragment调用 -- ok
+2. WebView的封装 -- ok
+3. WebView内存泄露处理 -- ok
+4. UA加上应用包名，versionName，versionCode，模块名 -- ok
+
+20171019
+待完成
+1. 文件及包的访问权限      --- ok
+2. WebView 部分方法的放置位置需要调整  -- ok
+3. WebView 默认设置调整 -- ok
+
+2017/11/25
+待完成
+1. jar的混淆
+2. 去掉4.2以下适配代码 -- ok

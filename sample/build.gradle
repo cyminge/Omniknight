@@ -50,6 +50,8 @@ dependencies {
     compile project(':tracer')
     compile project(':threadbus')
     compile project(':tools')
+    compile project(':webviewagent')
+    compile project(':statistics')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -59,6 +61,8 @@ dependencies {
     compile project(path: ':tools')
     compile project(path: ':threadbus')
     compile project(path: ':netty-all-4.1.23.Final')
+    compile project(path: ':webviewagent')
+    compile project(path: ':statistics')
     compile 'com.android.support:multidex:1.0.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 

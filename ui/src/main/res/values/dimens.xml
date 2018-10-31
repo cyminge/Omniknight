@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="size_0">0dp</dimen>
+    <dimen name="size_1">1dp</dimen>
+    <dimen name="size_2">2dp</dimen>
+    <dimen name="size_3">3dp</dimen>
+    <dimen name="size_4">4dp</dimen>
+    <dimen name="size_5">5dp</dimen>
+    <dimen name="size_6">6dp</dimen>
+
+    <dimen name="dp_40">40dp</dimen>
+    <dimen name="app_sp_14">14sp</dimen>
+
+
+
+</resources>

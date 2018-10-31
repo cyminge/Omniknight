@@ -1,0 +1,177 @@
+<resources>
+
+   <!-- &lt;!&ndash; Base application theme. &ndash;&gt;
+    <style name="AppTheme" parent="android:Theme.Material.Light.DarkActionBar">
+        &lt;!&ndash; Customize your theme here. &ndash;&gt;
+
+        &lt;!&ndash;<item name="android:windowNoTitle">true</item>&ndash;&gt;
+        &lt;!&ndash;<item name="android:windowActionBar">false</item>&ndash;&gt;
+        &lt;!&ndash;<item name="android:windowAnimationStyle">@null</item>&ndash;&gt;
+        &lt;!&ndash;<item name="android:windowLightStatusBar">false</item>&ndash;&gt;
+        &lt;!&ndash;<item name="android:windowFullscreen">true</item>&ndash;&gt;
+        &lt;!&ndash;<item name="android:colorPrimary">@color/transparent</item>&ndash;&gt;
+        &lt;!&ndash;   <item name="android:windowLightStatusBar">true</item>&ndash;&gt;
+        &lt;!&ndash;<item name="android:windowTranslucentStatus">true</item>&ndash;&gt;
+        &lt;!&ndash; <item name="android:windowIsTranslucent">true</item> &ndash;&gt;
+        &lt;!&ndash;<item name="android:colorPrimaryDark">@android:color/transparent</item>&ndash;&gt;
+        &lt;!&ndash;<item name="android:windowBackground">@drawable/amigo_default_start_page_tiny</item>&ndash;&gt;
+
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowBackground">@drawable/app_window_background</item>
+
+
+    </style>
+
+    <style name="app_TopFloatActivityDialogTheme" parent="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
+        <item name="android:windowAnimationStyle">@style/app_UpDownAnimTheme</item>
+    </style>
+
+-->
+<!--
+    <style name="push_animation_dialog_style" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+
+        <item name="android:windowAnimationStyle">@style/UpDownAnimTheme</item>
+    </style>
+-->
+
+
+    <style name="app_FloatActivityDialogTheme" parent="android:style/Theme.Dialog">
+        <!-- float_box为我们定义的窗口背景 ，这个不是必须的 -->
+        <item name="android:windowBackground">@drawable/app_transparent_bg</item>
+        <item name="android:windowAnimationStyle">@style/app_DownUpAnimTheme</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="app_DownUpAnimTheme" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/app_enter</item>
+        <item name="android:windowExitAnimation">@anim/app_exit</item>
+    </style>
+
+<!--
+
+    <style name="app_UpDownAnimTheme" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/app_push_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/app_push_bottom_out</item>
+    </style>
+
+    <style name="app_WeatherText">
+        <item name="android:textColor">#cc000000</item>
+    </style>
+
+    <style name="app_menu_item_title_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/app_dp_30</item>
+        <item name="android:background">@drawable/app_setting_menu_item_bg</item>
+        <item name="android:paddingLeft">@dimen/app_setting_padding_left</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/app_color_4d000000</item>
+        <item name="android:textSize">@dimen/app_sp_12</item>
+    </style>
+
+    <style name="app_setting_menu_item_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/app_dp_54</item>
+        <item name="android:background">@drawable/app_setting_menu_item_bg</item>
+        <item name="android:textColor">@color/app_cc000000</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:onClick">onClick</item>
+        <item name="android:clickable">true</item>
+        <item name="android:paddingLeft">@dimen/app_dp_18</item>
+        <item name="android:paddingRight">@dimen/app_dp_18</item>
+        <item name="android:shadowColor">@color/app_white</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1</item>
+        <item name="android:textSize">@dimen/app_sp_14</item>
+        <item name="android:drawableRight">@drawable/app_setting_more_triangle</item>
+        <item name="android:drawablePadding">14dip</item>
+    </style>
+
+    <style name="app_menu_item_style_two">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/app_setting_menu_item_bg</item>
+        <item name="android:clickable">false</item>
+        <item name="android:focusable">false</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:paddingLeft">@dimen/app_setting_padding_left</item>
+        <item name="android:paddingRight">@dimen/app_dp_18</item>
+        <item name="android:textSize">@dimen/app_sp_14</item>
+        <item name="android:textColor">@color/app_cc000000</item>
+        <item name="android:drawablePadding">14dp</item>
+    </style>
+
+    <style name="app_menu_item_hint_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/app_setting_menu_item_bg</item>
+        <item name="android:clickable">false</item>
+        <item name="android:focusable">false</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">@dimen/app_setting_padding_left</item>
+        <item name="android:textColor">@color/app_color_4d000000</item>
+        <item name="android:paddingRight">@dimen/app_dp_66</item>
+        <item name="android:textSize">@dimen/app_sp_12</item>
+    </style>
+
+    <style name="app_ActionBarOverlay" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@drawable/app_weather_bg</item>
+        <item name="android:actionBarStyle">@style/app_ToolbarTheme</item>
+    </style>
+
+    <style name="app_ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetEnd">0dp</item>
+        <item name="contentInsetLeft">0dp</item>
+        <item name="contentInsetRight">0dp</item>
+        <item name="android:contentInsetStart">0dp</item>
+        <item name="android:contentInsetEnd">0dp</item>
+        <item name="android:contentInsetLeft">0dp</item>
+        <item name="android:contentInsetRight">0dp</item>
+    </style>
+    <style name="app_fullscreen_btn_line_style">
+        <item name="android:background">@color/app_setting_dividing_line_color</item>
+    </style>
+
+
+    <style name="app_DialogActivity" parent="@style/Theme.Amigo.Light.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowCloseOnTouchOutside">false</item>
+    </style>
+
+    <style name="app_SplashTheme" parent="@android:style/Theme.DeviceDefault.NoActionBar">
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:colorPrimaryDark">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@drawable/app_launch_bg</item>
+        <item name="android:colorBackground">@color/white</item>
+        &lt;!&ndash;statusBarColor&ndash;&gt;
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+       &lt;!&ndash;statusBarTextColor&ndash;&gt;
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        &lt;!&ndash;navigationbar color&ndash;&gt;
+        <item name="android:navigationBarColor">@color/white</item>&ndash;&gt;
+    </style>-->
+
+</resources>

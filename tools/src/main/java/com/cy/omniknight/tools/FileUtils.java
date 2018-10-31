@@ -564,6 +564,14 @@ public final class FileUtils {
         return dir.delete();
     }
 
+
+    public static void deleteFile(String dir, String filename) {
+        File file = new File(dir, filename);
+        if (file != null && file.exists()) {
+            file.delete();
+        }
+    }
+
     /**
      * Delete the file.
      *

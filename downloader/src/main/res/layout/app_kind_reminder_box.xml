@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_parent_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/app_dialog_shadow_bg"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/dialog_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/app_dp_3"
+        android:layout_marginLeft="@dimen/app_dp_20"
+        android:layout_marginTop="@dimen/app_dp_20"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/app_color_fa9c22"
+        android:textSize="@dimen/app_sp_18" />
+
+
+    <LinearLayout
+        android:id="@+id/dialog_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="13dp"
+        android:layout_marginTop="6dp"
+        android:minHeight="60dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/dialog_content_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/app_dp_19"
+            android:paddingRight="@dimen/app_dp_20"
+            android:textColor="@color/app_color_cc000000"
+            android:textSize="@dimen/app_sp_16" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/app_dp_52"
+        android:orientation="vertical">
+
+        <include layout="@layout/app_dividing_line_layout"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/negative_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/app_full_dialog_negative_btn_corner_bg"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/app_color_cc000000"
+                android:textSize="@dimen/app_sp_16" />
+
+            <View
+                android:background="@color/app_color_e6e6e6"
+                android:layout_width="1px"
+                android:layout_height="match_parent" />
+
+            <Button
+                android:id="@+id/positive_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/app_full_dialog_positive_btn_corner_bg"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/app_color_fa9c22"
+                android:textSize="@dimen/app_sp_16" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

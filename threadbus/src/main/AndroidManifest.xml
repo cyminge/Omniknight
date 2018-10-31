@@ -1,7 +1,6 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.gionee.threadbus"
-    android:versionCode="10001"
-    android:versionName="1.0.a">
-    <application android:allowBackup="true" android:label="@string/app_name" android:supportsRtl="true"></application>
+    package="com.cy.threadbus"
+    android:versionCode="10002"
+    android:versionName="1.0.b">
 </manifest>

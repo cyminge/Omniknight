@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_pressed="true">
+        <shape>
+            <corners android:bottomRightRadius="@dimen/app_dp_12" />
+
+            <solid android:color="@color/app_fullscreen_btn_bg_press" />
+        </shape>
+    </item>
+    <item android:state_pressed="false">
+        <shape>
+            <corners android:bottomRightRadius="@dimen/app_dp_12" />
+
+            <solid android:color="@color/app_fullscreen_negative_btn_bg_normal" />
+        </shape>
+    </item>
+
+</selector>

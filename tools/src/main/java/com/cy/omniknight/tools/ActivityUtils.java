@@ -539,6 +539,26 @@ public final class ActivityUtils {
         }
     }
 
+    public static void startActivityNotFrequently(@NonNull Context context,
+                                     @NonNull Intent intent) {
+        if(isTimeTooShort()) {
+            return;
+        }
+        startActivity(intent, context, null);
+    }
+
+    private static long sLastVisitTime;
+
+    public static boolean isTimeTooShort() {
+        long currentTime = System.currentTimeMillis();
+        long interval = Math.abs(currentTime - sLastVisitTime);
+        boolean tooShort = interval < 300;
+        if (!tooShort) {
+            sLastVisitTime = currentTime;
+        }
+        return tooShort;
+    }
+
     /**
      * Start the activity.
      *
@@ -1508,6 +1528,9 @@ public final class ActivityUtils {
     private static void startActivity(final Intent intent,
                                       final Context context,
                                       final Bundle options) {
+
+
+
         if (!(context instanceof Activity)) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }

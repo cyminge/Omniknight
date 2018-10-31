@@ -6,7 +6,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 14
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -31,5 +31,13 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    provided project(':tools')
+    provided project(path: ':tools')
+    provided project(':threadbus')
+    provided project(path: ':threadbus')
+    api 'com.liulishuo.okdownload:okdownload:1.0.4'
+// provide sqlite to store breakpoints
+    api 'com.liulishuo.okdownload:sqlite:1.0.4'
 
+    provided fileTree(dir: 'ref_libs', include: ['*.jar'])
 }

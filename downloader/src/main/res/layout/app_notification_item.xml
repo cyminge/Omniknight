@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#fafafa"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_marginBottom="@dimen/app_dp_10"
+        android:layout_marginTop="@dimen/app_dp_10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/notify_icon"
+            android:layout_width="@dimen/app_dp_40"
+            android:layout_height="@dimen/app_dp_40"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/app_dp_12" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <com.android.core.view.CustomFontTextView
+                android:id="@+id/notify_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="#202020"
+                android:textSize="@dimen/app_sp_16" />
+
+            <ProgressBar
+                android:id="@+id/notify_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/app_dp_3"
+                android:layout_marginRight="@dimen/app_dp_10"
+                android:layout_marginTop="@dimen/app_dp_6"
+                android:background="#33ff9000"
+                android:progressDrawable="@drawable/app_download_notification_progressbar" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/app_dp_6"
+                android:layout_marginTop="@dimen/app_dp_6">
+
+                <com.android.core.view.CustomFontTextView
+                    android:id="@+id/notify_detail_percent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textColor="#737373"
+                    android:textSize="@dimen/app_dp_14" />
+
+                <com.android.core.view.CustomFontTextView
+                    android:id="@+id/notify_detail_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textColor="#737373"
+                    android:textSize="@dimen/app_dp_14" />
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.android.core.view.CustomFontTextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/app_dp_1"
+        android:layout_marginLeft="@dimen/app_dp_72"
+        android:layout_marginRight="@dimen/app_dp_10"
+        android:background="#20000000" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/app_dp_56"
+        android:layout_marginLeft="@dimen/app_dp_72"
+        android:layout_marginRight="@dimen/app_dp_10">
+
+        <com.android.core.view.CustomFontTextView
+            android:id="@+id/notify_detail_option"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="#737373"
+            android:textSize="@dimen/app_dp_14" />
+    </LinearLayout>
+
+</LinearLayout>

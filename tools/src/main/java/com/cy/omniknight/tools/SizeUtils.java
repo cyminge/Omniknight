@@ -1,9 +1,16 @@
 package com.cy.omniknight.tools;
 
+import android.content.Context;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 /**
  * <pre>
@@ -171,4 +178,19 @@ public final class SizeUtils {
     public interface onGetSizeListener {
         void onGetSize(View view);
     }
+
+    public static int getTextWidth(String text, Paint paint) {
+        Rect bounds = new Rect();
+        paint.getTextBounds(text, 0, text.length(), bounds);
+        int width = bounds.left + bounds.width();
+        return width;
+    }
+
+    public static int getTextHeight(String text, Paint paint) {
+        Rect bounds = new Rect();
+        paint.getTextBounds(text, 0, text.length(), bounds);
+        int height = bounds.bottom + bounds.height();
+        return height;
+    }
+
 }

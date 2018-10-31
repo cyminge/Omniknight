@@ -5,19 +5,24 @@ import android.os.Process;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import com.cy.omniknight.R;
-import com.gionee.threadbus.*;
-import com.gionee.threadbus.core.IScheduler;
-import com.gionee.threadbus.core.PriorityThreadFactory;
-import com.gionee.threadbus.utils.Constant;
-import com.gionee.threadbus.utils.DeviceUtil;
+
+import com.cy.threadbus.ScheduleListener;
+import com.cy.threadbus.ScheduledTask;
+import com.cy.threadbus.SchedulerConfiguration;
+import com.cy.threadbus.SchedulerFactory;
+import com.cy.threadbus.TaskCallable;
+import com.cy.threadbus.TaskRunnable;
+import com.cy.threadbus.core.IScheduler;
+import com.cy.threadbus.core.PriorityThreadFactory;
+import com.cy.threadbus.utils.Constant;
+import com.cy.threadbus.utils.DeviceUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.concurrent.*;
 
-import static com.gionee.threadbus.SchedulerFactory.getSingleDelayedScheduler;
-import static com.gionee.threadbus.ThreadBus.newAssembler;
+import static com.cy.threadbus.SchedulerFactory.getSingleDelayedScheduler;
+import static com.cy.threadbus.ThreadBus.newAssembler;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -105,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onClickOne(View view) {
         TestTaskRunnable runnable = new TestTaskRunnable("测试TaskRunnable调用流程", Process.THREAD_PRIORITY_FOREGROUND, Constant.USER_DEFINED_TASK_SORT_PRIORITY_DEFAULT);
-        ThreadBus.newAssembler().create(runnable).scheduleOn(SchedulerFactory.getUnlimitedScheduler()).start();
+        newAssembler().create(runnable).scheduleOn(SchedulerFactory.getUnlimitedScheduler()).start();
     }
 
     /**
@@ -120,8 +125,8 @@ public class MainActivity extends AppCompatActivity {
     public void onClickTwo(View view) {
         TestTaskCallable callable = new TestTaskCallable("测试TaskCallable调用流程", Process.THREAD_PRIORITY_FOREGROUND, Constant.USER_DEFINED_TASK_SORT_PRIORITY_DEFAULT);
         MySchedulerListener schedulerListener = new MySchedulerListener(this);
-        ScheduledTask scheduledTask = ThreadBus.newAssembler().create(callable, schedulerListener)
-                .scheduleOn(SchedulerFactory.getSingleDelayedScheduler())
+        ScheduledTask scheduledTask = newAssembler().create(callable, schedulerListener)
+                .scheduleOn(getSingleDelayedScheduler())
                 .startForResult();
         Log.d(TAG, "开始执行");
         // 下面的代码中get()是一个阻塞方法，如果是在主线程调用的话，不要用该方式获取结果，请用ScheduleListener回调的方式；
@@ -148,12 +153,12 @@ public class MainActivity extends AppCompatActivity {
         TestTaskCallable callable66 = new TestTaskCallable("测试可插队线程池 66", Process.THREAD_PRIORITY_FOREGROUND, Constant.USER_DEFINED_TASK_SORT_PRIORITY_NORMAL);
 
         MySchedulerListener schedulerListener = new MySchedulerListener(this);
-        ThreadBus.newAssembler().create(callable22, schedulerListener).scheduleOn(SchedulerFactory.getSingleSortableScheduler()).startForResult();
-        ThreadBus.newAssembler().create(runnable11).scheduleOn(SchedulerFactory.getSingleSortableScheduler()).start();
-        ThreadBus.newAssembler().create(callable44, schedulerListener).scheduleOn(SchedulerFactory.getSingleSortableScheduler()).startForResult();
-        ThreadBus.newAssembler().create(runnable33).scheduleOn(SchedulerFactory.getSingleSortableScheduler()).start();
-        ThreadBus.newAssembler().create(callable66, schedulerListener).scheduleOn(SchedulerFactory.getSingleSortableScheduler()).startForResult();
-        ThreadBus.newAssembler().create(runnable55).scheduleOn(SchedulerFactory.getSingleSortableScheduler()).start();
+        newAssembler().create(callable22, schedulerListener).scheduleOn(SchedulerFactory.getSingleSortableScheduler()).startForResult();
+        newAssembler().create(runnable11).scheduleOn(SchedulerFactory.getSingleSortableScheduler()).start();
+        newAssembler().create(callable44, schedulerListener).scheduleOn(SchedulerFactory.getSingleSortableScheduler()).startForResult();
+        newAssembler().create(runnable33).scheduleOn(SchedulerFactory.getSingleSortableScheduler()).start();
+        newAssembler().create(callable66, schedulerListener).scheduleOn(SchedulerFactory.getSingleSortableScheduler()).startForResult();
+        newAssembler().create(runnable55).scheduleOn(SchedulerFactory.getSingleSortableScheduler()).start();
 
         Log.d(TAG, "开始执行");
     }
@@ -187,14 +192,14 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onClickFive(View view) {
         TestTaskRunnable runnable = new TestTaskRunnable("测试延时执行任务 11", Process.THREAD_PRIORITY_FOREGROUND, Constant.USER_DEFINED_TASK_SORT_PRIORITY_DEFAULT);
-        ThreadBus.newAssembler().create(runnable)
+        newAssembler().create(runnable)
                 .scheduleOn(getSingleDelayedScheduler())
                 .delay(5L, TimeUnit.SECONDS)
                 .start();
 
         TestTaskCallable callable = new TestTaskCallable("测试延时执行任务 22", Process.THREAD_PRIORITY_FOREGROUND, Constant.USER_DEFINED_TASK_SORT_PRIORITY_DEFAULT);
         MySchedulerListener schedulerListener = new MySchedulerListener(this);
-        ScheduledTask scheduledTask = ThreadBus.newAssembler().create(callable, schedulerListener)
+        ScheduledTask scheduledTask = newAssembler().create(callable, schedulerListener)
                 .scheduleOn(getSingleDelayedScheduler())
                 .delay(2L, TimeUnit.SECONDS)
                 .startForResult();
@@ -209,13 +214,13 @@ public class MainActivity extends AppCompatActivity {
     public void onClickSix(View view) {
         TestTaskRunnable runnable11 = new TestTaskRunnable("测试周期执行任务 11", Process.THREAD_PRIORITY_FOREGROUND, Constant.USER_DEFINED_TASK_SORT_PRIORITY_DEFAULT);
         TestTaskRunnable runnable22 = new TestTaskRunnable("测试周期执行任务 22", Process.THREAD_PRIORITY_FOREGROUND, Constant.USER_DEFINED_TASK_SORT_PRIORITY_DEFAULT);
-        ThreadBus.newAssembler().create(runnable11)
-                .scheduleOn(SchedulerFactory.getSingleDelayedScheduler())
+        newAssembler().create(runnable11)
+                .scheduleOn(getSingleDelayedScheduler())
                 .delay(1, TimeUnit.SECONDS)
                 .period(1)
                 .start();
-        ThreadBus.newAssembler().create(runnable22)
-                .scheduleOn(SchedulerFactory.getSingleDelayedScheduler())
+        newAssembler().create(runnable22)
+                .scheduleOn(getSingleDelayedScheduler())
                 .delay(2, TimeUnit.SECONDS)
                 .period(2)
                 .start();
@@ -322,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+//        setContentView(R.layout.activity_main);
 
     }
 

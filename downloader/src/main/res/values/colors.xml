@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="app_colorPrimary">#3F51B5</color>
+    <color name="app_colorPrimaryDark">#303F9F</color>
+    <color name="app_colorAccent">#FF4081</color>
+
+    <color name="app_title_color">#FFF2F2F2</color>
+    <color name="app_normal_tab_widget_bg">#ffffff</color>
+    <color name="app_sub_tab_text_selected">#ff9000</color>
+    <color name="app_reminder_bg">#f7f7f7</color>
+
+    <color name="app_almanac_top_solar_text_color">#c23939</color>
+    <color name="app_almanac_top_lunar_text_color">#c23939</color>
+    <color name="app_almanac_top_ear_text_color">#c23939</color>
+    <color name="app_almanac_back">#f2f2f2</color>
+
+    <color name="app_color_transparency">#00000000</color>
+    <color name="app_color_ff7573">#ff7573</color>
+    <color name="app_color_616161">#616161</color>
+    <color name="app_app_color_e29594">#e29594</color>
+    <color name="app_color_ff5400">#ff5400</color>
+    <color name="app_color_53ac00">#53ac00</color>
+    <color name="app_color_66000000">#66000000</color>
+    <color name="app_color_e6e6e6">#e6e6e6</color>
+    <color name="app_color_fa9c22">#fa9c22</color>
+    <color name="app_color_f7f7f7">#f7f7f7</color>
+    <color name="app_color_e95e53">#e95e53</color>
+    <color name="app_color_63be19">#63be19</color>
+    <color name="app_color_80000000">#80000000</color>
+    <color name="app_color_cc000000">#cc000000</color>
+    <color name="app_color_444444">#ff444444</color>
+    <color name="app_color_f7d5b2">#fff7d5b2</color>
+    <color name="app_color_E87754">#fff6521f</color>
+    <color name="app_black">#000000</color>
+    <color name="app_red">#be002f</color>
+    <color name="app_blue">#5d9cec</color>
+    <color name="app_yellow">#feeeb8</color>
+    <color name="app_gray">#e3e3e3</color>
+    <color name="app_white">#ffffff</color>
+    <color name="app_repeat_selection_box_bg">#ffffff</color>
+    <color name="app_repeat_selection_box_text_color">#fa9c22</color>
+    <color name="app_fa9c22">#fa9c22</color>
+
+    <color name="app_actionbar_bg">#43C1E8</color>
+    <color name="app_F48920">#F48920</color>
+    <color name="app_default_button_bg_pressed_color">#ebebeb</color>
+    <color name="app_default_button_bg_default_color">#00000000</color>
+    <color name="app_edit_text_disable">#7abdbdbd</color>
+    <color name="app_edit_text_enabled">#444444</color>
+
+    <color name="app_goodday_solar_calendar_text_color">#99000000</color>
+    <color name="app_goodday_after_days_text_color">#ff444444</color>
+    <color name="app_goodday_lunar_calendar_text_color">#99000000</color>
+    <color name="app_bar_defaultb_color">#f4f4f4</color>
+
+    <color name="app_web_view_bg_color">#fafafa</color>
+    <drawable name="app_actionbar_bg">#ededed</drawable>
+    <color name="app_web_title_txt_color">#99000000</color>
+    <color name="app_web_no_net_text_color">#cc000000</color>
+    <color name="app_action_bar_text_color">#cc000000</color>
+    <color name="app_good_day_key_title_text_color">#cc000000</color>
+    <color name="app_good_day_key_sub_title_text_color">#66000000</color>
+    <color name="app_good_day_key_text_color_sel">#fa9c22</color>
+    <color name="app_good_day_key_text_color_normal">#4D000000</color>
+    <color name="app_good_day_key_ji_text_color">#ffffff</color>
+    <color name="app_good_day_key_yi_text_color">#ffffff</color>
+    <color name="app_good_day_key_yi_ji_bg">#ffffff</color>
+    <color name="app_good_day_ji_text_color">#80000000</color>
+    <color name="app_line_color">#c6c6c6</color>
+    <color name="app_cc000000">#cc000000</color>
+    <color name="app_color_eeeeee">#eeeeee</color>
+    <color name="app_color_4d000000">#4d000000</color>
+    <color name="app_color_33000000">#33000000</color>
+    <color name="app_color_2db2e3">#2db2e3</color>
+
+    <color name="app_title_bar_gradient_left_color">#ff46b3ec</color>
+    <color name="app_title_bar_gradient_right_color">#ff46b3ec</color>
+
+    <color name="app_setting_dividing_line_color_deep">#f7f7f7</color>
+    <color name="app_setting_menu_bg">#fafafa</color>
+    <color name="app_setting_dividing_line_color">#33828282</color>
+
+    <color name="app_fullscreen_negative_btn_bg_normal">#F5F5F5</color>
+    <color name="app_fullscreen_positive_btn_bg_normal">#F5F5F5</color>
+    <color name="app_fullscreen_btn_bg_press">#0D000000</color>
+    <color name="app_good_day_line_color">#e6e6e6</color>
+    <color name="app_start_jump_text_color">#FFFEFEFE</color>
+    <color name="app_color_E6A23F">#E6A23F</color>
+    <color name="app_calendar_24_solar_terms">#80000000</color>
+    <color name="app_color_7ccb00">#ff7ccb00</color>
+</resources>
