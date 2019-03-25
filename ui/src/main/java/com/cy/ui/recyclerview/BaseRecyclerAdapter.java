@@ -382,7 +382,7 @@ public class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseRecyclerVie
     }
 
     public int getFooterViewCount() {
-        return null != mFooterTypePool ? 1 : 0;
+        return mFooterTypePool.getTypeCounts();
     }
 
     public int getLoadMoreViewCount() {
